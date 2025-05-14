@@ -82,7 +82,7 @@ export default function Navbar() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder='Search...'
-                className='w-full border-0 rounded-lg px-4 py-2 text-base bg-white dark:bg-gray-800 dark:text-white transition'
+                className='w-full focus:outline-none border-0 rounded-lg px-4 py-2 text-base bg-white dark:bg-gray-800 dark:text-white transition'
               />
               <button 
                 type='submit' 
