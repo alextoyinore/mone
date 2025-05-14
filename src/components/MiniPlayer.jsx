@@ -8,10 +8,12 @@ import PlayIcon from '@/components/icons/PlayIcon';
 import PauseIcon from '@/components/icons/PauseIcon';
 import NextIcon from '@/components/icons/NextIcon';
 import PreviousIcon from '@/components/icons/PreviousIcon';
+import LoopIcon from '@/components/icons/LoopIcon';
+import ShuffleIcon from '@/components/icons/ShuffleIcon';
 
 
 export default function MiniPlayer() {
-  const { currentSong, isPlaying, progress, togglePlayPause, seekTo, playPreviousSong, playNextSong } = useAudioPlayer();
+  const { currentSong, isPlaying, progress, togglePlayPause, seekTo, playPreviousSong, playNextSong, loopMode, toggleLoopMode, isShuffling, toggleShuffleMode } = useAudioPlayer();
 
   // If no song is playing, return null
   if (!currentSong) return null;
@@ -37,6 +39,12 @@ export default function MiniPlayer() {
         </div>
         
         <div className="flex items-center space-x-4">
+          <ShuffleIcon 
+            onClick={toggleShuffleMode} 
+            isActive={isShuffling}
+            className="w-5 h-5 text-gray-600 hover:text-black dark:hover:text-white cursor-pointer"
+          />
+
           <button 
             onClick={playPreviousSong}
             className="text-gray-700 hover:text-blue-600 transition"
@@ -61,6 +69,12 @@ export default function MiniPlayer() {
           >
             <NextIcon className="w-5 h-5" />
           </button>
+
+          <LoopIcon 
+            onClick={toggleLoopMode} 
+            isActive={loopMode !== 0}
+            className="w-5 h-5 text-gray-600 hover:text-black dark:hover:text-white cursor-pointer"
+          />
         </div>
       </div>
       

@@ -2025,6 +2025,13 @@
       }
     }
   }
+  .hover\:text-black {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-black);
+      }
+    }
+  }
   .hover\:text-blue-600 {
     &:hover {
       @media (hover: hover) {
@@ -2515,6 +2522,15 @@
       &:hover {
         @media (hover: hover) {
           color: var(--color-gray-600);
+        }
+      }
+    }
+  }
+  .dark\:hover\:text-white {
+    @media (prefers-color-scheme: dark) {
+      &:hover {
+        @media (hover: hover) {
+          color: var(--color-white);
         }
       }
     }
