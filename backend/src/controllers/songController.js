@@ -144,7 +144,7 @@ exports.createSong = async (req, res) => {
 
 exports.getSongs = async (req, res) => {
   try {
-    const songs = await Song.find().populate('artist', 'name avatar');
+    const songs = await Song.find().populate('artist', 'name avatar').sort({ createdAt: -1 });
     res.json(songs);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch songs' });

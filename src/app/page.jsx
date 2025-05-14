@@ -8,7 +8,7 @@ export default function Home() {
   const { theme } = useTheme();
 
   return (
-    <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+    <div className="min-h-screen p-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
           <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
       
       {user ? (

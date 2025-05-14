@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { AudioPlayerProvider } from '@/contexts/AudioPlayerContext';
+import { SongOptionsProvider } from '@/contexts/SongOptionsContext';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import MiniPlayer from '@/components/MiniPlayer';
@@ -33,11 +34,13 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           <ThemeProvider>
             <AudioPlayerProvider>
-              <Navbar />
-              <main className="flex-grow relative overflow-y-auto transition-all duration-300">
-                <MiniPlayer className="sticky top-0 left-0 right-0 z-50" />
-                {children}
-              </main>
+              <SongOptionsProvider>
+                <Navbar />
+                <main className="flex-grow relative overflow-y-auto transition-all duration-300">
+                  <MiniPlayer className="sticky top-0 left-0 right-0 z-50" />
+                  {children}
+                </main>
+              </SongOptionsProvider>
             </AudioPlayerProvider>
           </ThemeProvider>
         </AuthProvider>

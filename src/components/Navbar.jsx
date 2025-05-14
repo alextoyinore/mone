@@ -22,13 +22,14 @@ import PlaylistIcon from './icons/PlaylistIcon';
 import ProfileIcon from './icons/ProfileIcon';
 import AlbumIcon from './icons/AlbumIcon';
 import ThemeIcon from './icons/ThemeIcon';
-
+import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
   const [search, setSearch] = useState('');
   const [isExpanded, setIsExpanded] = useState(true);
   const router = useRouter();
   const { user, logout } = useAuth();
+  const pathname = usePathname();
   const [notifOpen, setNotifOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
 
@@ -55,7 +56,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`sticky relative top-0 left-0 overflow-y-auto p-5 ${isExpanded ? 'w-80' : 'w-20'} bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 h-screen transition-all duration-300 ease-in-out z-40`}>
+      <nav className={`sticky relative top-0 left-0 overflow-y-auto p-5 ${isExpanded ? 'w-70' : 'w-20'} bg-gray-100 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 h-screen transition-all duration-300 ease-in-out z-40`}>
         {/* Logo */}
         <Link href="/">
           <div className='flex items-center cursor-pointer gap-1 mb-6 ml-2'>
@@ -81,7 +82,7 @@ export default function Navbar() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder='Search...'
-                className='w-full border-0 rounded-lg px-4 py-2 text-base bg-gray-100 dark:bg-gray-800 dark:text-white transition'
+                className='w-full border-0 rounded-lg px-4 py-2 text-base bg-white dark:bg-gray-800 dark:text-white transition'
               />
               <button 
                 type='submit' 
@@ -100,7 +101,9 @@ export default function Navbar() {
               <Link 
                 key={item.name} 
                 href={item.path} 
-                className={`flex items-center text-sm ${isExpanded ? 'space-x-3 px-3 py-2' : 'justify-center p-2'} rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-gray-700 dark:text-gray-300 dark:hover:text-gray-400`}
+                className={`flex items-center text-sm ${isExpanded ? 'space-x-3 px-3 py-2' : 'justify-center p-2'} rounded-lg transition text-gray-700 dark:text-gray-300 ${pathname === item.path 
+                  ? 'bg-gray-200 dark:bg-gray-900 text-gray-900 dark:text-white' 
+                  : 'hover:bg-gray-200 dark:hover:bg-gray-900 dark:hover:text-gray-400'}`}
               >
                 <item.icon className={`w-4 h-4 ${isExpanded ? '' : 'w-5 h-5 cursor-pointer mx-auto'}`} />
                 {isExpanded && <span>{item.name}</span>}
@@ -109,7 +112,9 @@ export default function Navbar() {
               <button
                 key={item.name}
                 onClick={item.onClick}
-                className={`w-full flex text-sm items-center ${isExpanded ? 'space-x-3 px-3 py-2' : 'justify-center p-2'} rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-gray-700 dark:text-gray-300 dark:hover:text-gray-400`}
+                className={`w-full flex text-sm items-center ${isExpanded ? 'space-x-3 px-3 py-2' : 'justify-center p-2'} rounded-lg transition text-gray-700 dark:text-gray-300 ${item.active 
+                  ? 'bg-gray-200 dark:bg-gray-900 text-gray-900 dark:text-white' 
+                  : 'hover:bg-gray-200 dark:hover:bg-gray-900 dark:hover:text-gray-400'}`}
               >
                 <item.icon className={`w-4 h-4 ${isExpanded ? '' : 'mx-auto'}`} />
                 {isExpanded && <span>{item.name}</span>}
