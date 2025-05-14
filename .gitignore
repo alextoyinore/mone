@@ -19,6 +19,8 @@ dist-ssr
 !.env.example
 .env.local
 
+.next/
+
 # backend
 /backend/.env
 /backend/.env.*
