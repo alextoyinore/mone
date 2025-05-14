@@ -23,7 +23,7 @@ export default function MiniPlayer() {
   const songCoverArt = parseSongValue(currentSong.coverArt, 'https://placehold.co/64x64');
 
   return (
-    <div className="sticky top-0 left-0 bg-white/70 dark:bg-gray-900/70 backdrop-blur-md flex items-center px-4 py-2 z-50 rounded-t-2xl border-t border-gray-200 dark:border-gray-800 transition-all duration-700">
+    <div className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-md flex items-center px-4 py-2 z-50 rounded-t-2xl border-t border-gray-200 dark:border-gray-800 transition-all duration-700">
       <div className="flex items-center space-x-4 w-full">
         <Image 
           src={songCoverArt} 

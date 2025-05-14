@@ -34,8 +34,8 @@ export default function RootLayout({ children }) {
           <ThemeProvider>
             <AudioPlayerProvider>
               <Navbar />
-              <main className="flex-grow overflow-y-auto transition-all duration-300 pb-20">
-                <MiniPlayer />
+              <main className="flex-grow relative overflow-y-auto transition-all duration-300">
+                <MiniPlayer className="sticky top-0 left-0 right-0 z-50" />
                 {children}
               </main>
             </AudioPlayerProvider>
