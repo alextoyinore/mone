@@ -17,6 +17,16 @@ export const AudioPlayerProvider = ({ children }) => {
   const [progress, setProgress] = useState(0);
   const audioRef = useRef(null);
 
+  // Toggle loop mode (cycle through 0, 1, 2)
+  const toggleLoopMode = useCallback(() => {
+    setLoopMode((prevMode) => (prevMode + 1) % 2);
+  }, []);
+
+  // Toggle shuffle mode
+  const toggleShuffleMode = useCallback(() => {
+    setIsShuffling((prev) => !prev);
+  }, []);
+
   // Method to set the entire songs list for playback
   const setSongsForPlayback = useCallback((songs) => {
     setSongsList(songs || []);
@@ -30,10 +40,31 @@ export const AudioPlayerProvider = ({ children }) => {
     const currentIndex = songsList.findIndex(song => song._id === currentSong._id);
     
     // Determine next song index
-    const nextIndex = (currentIndex + 1) % songsList.length;
+    let nextIndex;
+    if (isShuffling) {
+      // Randomly select a different song
+      do {
+        nextIndex = Math.floor(Math.random() * songsList.length);
+      } while (nextIndex === currentIndex && songsList.length > 1);
+    } else {
+      // Sequential playback
+      nextIndex = (currentIndex + 1) % songsList.length;
+    }
     
-    // Play the next song
-    playSong(songsList[nextIndex]);
+    // Play the next song based on loop mode
+    switch (loopMode) {
+      case 1: // Loop One: replay the current song
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play();
+        }
+        break;
+      case 2: // Loop All: always play next song, wrapping around
+      case 0: // No Loop: play next song, stop if at end
+      default:
+        playSong(songsList[nextIndex]);
+        break;
+    }
   };
 
   // Initialize audio element
@@ -285,7 +316,9 @@ export const AudioPlayerProvider = ({ children }) => {
     seekTo,
     playNextSong,
     playPreviousSong,
-    setSongsForPlayback
+    setSongsForPlayback,
+    toggleLoopMode,
+    toggleShuffleMode
   };
 
   return (

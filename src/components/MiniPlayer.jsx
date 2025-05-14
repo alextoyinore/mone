@@ -42,7 +42,7 @@ export default function MiniPlayer() {
           <ShuffleIcon 
             onClick={toggleShuffleMode} 
             isActive={isShuffling}
-            className="w-5 h-5 text-gray-600 hover:text-black dark:hover:text-white cursor-pointer"
+            className="w-5 h-5 text-gray-600 hover:text-blue-600 dark:hover:text-white cursor-pointer"
           />
 
           <button 
@@ -54,12 +54,12 @@ export default function MiniPlayer() {
           
           <button 
             onClick={togglePlayPause}
-            className="text-gray-700 hover:text-blue-600 transition flex items-center justify-center p-2 rounded-full border border-grey-400"
+            className="text-gray-700 hover:text-blue-600 transition flex items-center justify-center"
           >
             {isPlaying ? (
-              <PauseIcon className="w-5 h-5" />
+              <PauseIcon className="w-6 h-6" />
             ) : (
-              <PlayIcon className="w-5 h-5" />
+              <PlayIcon className="w-6 h-6" />
             )}
           </button>
           
@@ -73,7 +73,7 @@ export default function MiniPlayer() {
           <LoopIcon 
             onClick={toggleLoopMode} 
             isActive={loopMode !== 0}
-            className="w-5 h-5 text-gray-600 hover:text-black dark:hover:text-white cursor-pointer"
+            className="w-5 h-5 text-gray-600 hover:text-blue-600 dark:hover:text-white cursor-pointer"
           />
         </div>
       </div>
