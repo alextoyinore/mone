@@ -56,7 +56,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`sticky relative top-0 left-0 overflow-y-auto p-5 ${isExpanded ? 'w-70' : 'w-20'} bg-gray-100 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 h-screen transition-all duration-300 ease-in-out z-40`}>
+      <nav className={`sticky relative top-0 left-0 overflow-y-auto p-5 ${isExpanded ? 'w-80' : 'w-20'} bg-gray-100 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 h-screen transition-all duration-300 ease-in-out z-40`}>
         {/* Logo */}
         <Link href="/">
           <div className='flex items-center cursor-pointer gap-1 mb-6 ml-2'>

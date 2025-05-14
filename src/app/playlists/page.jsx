@@ -1,36 +1,74 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import AuthRequired from '../../components/AuthRequired';
+import axios from 'axios';
 
 export default function PlaylistsPage() {
   const { user } = useAuth();
-  const [playlists, setPlaylists] = useState([
-    { id: '1', name: 'Favorites', tracks: 12 },
-    { id: '2', name: 'Workout Mix', tracks: 8 },
-    { id: '3', name: 'Chill Vibes', tracks: 15 }
-  ]);
-
+  const [playlists, setPlaylists] = useState([]);
   const [newPlaylistName, setNewPlaylistName] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleCreatePlaylist = (e) => {
-    e.preventDefault();
-    if (!newPlaylistName.trim()) return;
+  useEffect(() => {
+    const fetchPlaylists = async () => {
+      if (!user) return;
 
-    const newPlaylist = {
-      id: String(playlists.length + 1),
-      name: newPlaylistName,
-      tracks: 0
+      try {
+        setLoading(true);
+        const response = await axios.get(`/api/playlists?user=${user.email}`);
+        setPlaylists(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch playlists');
+        setLoading(false);
+      }
     };
 
-    setPlaylists([...playlists, newPlaylist]);
-    setNewPlaylistName('');
+    fetchPlaylists();
+  }, [user]);
+
+  const handleCreatePlaylist = async (e) => {
+    e.preventDefault();
+    if (!newPlaylistName.trim() || !user) return;
+
+    try {
+      const response = await axios.post('/api/playlists', {
+        name: newPlaylistName,
+        user: user.email,
+        description: '',
+        isPublic: false
+      });
+
+      setPlaylists([...playlists, response.data]);
+      setNewPlaylistName('');
+    } catch (err) {
+      console.error('Failed to create playlist', err);
+    }
+  };
+
+  const handleDeletePlaylist = async (playlistId) => {
+    try {
+      await axios.delete(`/api/playlists/${playlistId}`);
+      setPlaylists(playlists.filter(p => p._id !== playlistId));
+    } catch (err) {
+      console.error('Failed to delete playlist', err);
+    }
   };
 
   if (!user) {
     return <AuthRequired message="You must be logged in to view playlists." />;
   } 
+
+  if (loading) {
+    return <div className="text-center py-8">Loading playlists...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500 text-center py-8">{error}</div>;
+  }
 
   return (
     <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
@@ -55,16 +93,19 @@ export default function PlaylistsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {playlists.map((playlist) => (
           <div 
-            key={playlist.id} 
+            key={playlist._id} 
             className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition"
           >
             <h2 className="text-xl font-semibold mb-2">{playlist.name}</h2>
-            <p className="text-gray-500 dark:text-gray-400">{playlist.tracks} tracks</p>
+            <p className="text-gray-500 dark:text-gray-400">{playlist.songs.length} tracks</p>
             <div className="mt-4 flex space-x-2">
               <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">
                 View
               </button>
-              <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
+              <button 
+                onClick={() => handleDeletePlaylist(playlist._id)}
+                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+              >
                 Delete
               </button>
             </div>
@@ -74,3 +115,4 @@ export default function PlaylistsPage() {
     </div>
   );
 }
+

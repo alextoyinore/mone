@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import PlayIcon from '@/components/icons/PlayIcon';
+import SongOptionsDropdown from './SongOptionsDropdown';
 
 export default function GridSongItem({ 
   song, 
@@ -28,7 +29,14 @@ export default function GridSongItem({
           onClick={() => playSong(song)}
           className="absolute bottom-2 left-2 w-10 h-10 flex items-center justify-center bg-white/20 backdrop-blur-sm text-white rounded-full hover:bg-white/30 transition opacity-0 group-hover:opacity-100"
         >
-          <PlayIcon isActive={false} className="w-6 h-6" />
+          <PlayIcon isActive={false} className="w-6 h-6 opacity-0 group-hover:opacity-75" />
+        </button>
+
+        <button 
+          onClick={() => playSong(song)}
+          className="absolute bottom-2 right-2 w-10 h-10 flex items-center justify-center bg-white/20 backdrop-blur-sm text-white rounded-full hover:bg-white/30 transition opacity-0 group-hover:opacity-100"
+        >
+          <SongOptionsDropdown song={song} />
         </button>
       </div>
       <div className="mt-2">

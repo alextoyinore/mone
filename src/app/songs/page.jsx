@@ -133,7 +133,7 @@ export default function SongsPage() {
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-              className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-gray-600 transition-colors"
+              className="p-2 rounded-full cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-gray-600 transition-colors"
             >
               {viewMode === 'grid' ? (
                 <ListIcon isActive={false} />

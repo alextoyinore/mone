@@ -38,13 +38,13 @@ export default function SongOptionsDropdown({ song }) {
       <HorizontalThreeDotsIcon 
         ref={iconRef}
         onClick={() => setOpenDropdownId(isOpen ? null : song._id)}
-        className="w-5 h-5 cursor-pointer opacity-0 group-hover:opacity-100 transition"
+        className="w-5 h-5 cursor-pointer z-50 opacity-0 group-hover:opacity-100 transition"
       />
       
       {isOpen && (
         <div 
           ref={dropdownRef}
-          className="absolute right-0 top-full mt-2 w-48 bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 origin-top-right animate-dropdown">
+          className="absolute right-0 top-full mt-2 w-48 bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 origin-bottom-right animate-dropdown">
           <Link 
             href={`/songs/${song._id}`} 
             className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-blue/10 transition cursor-pointer"
@@ -57,7 +57,7 @@ export default function SongOptionsDropdown({ song }) {
             onClick={() => {
               // TODO: Implement share functionality
               console.log('Share song', song);
-              setIsOpen(false);
+              setOpenDropdownId(null);
             }}
             className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-blue/10 transition cursor-pointer"
           >
