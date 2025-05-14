@@ -50,7 +50,7 @@ export default function Navbar() {
     { name: 'Favorites', icon: FavoriteIcon, path: '/favorites' },
     { name: 'Recently Played', icon: RecentIcon, path: '/recent' },
     { name: 'Playlists', icon: PlaylistIcon, path: '/playlists' },
-    { name: 'Profile', icon: ProfileIcon, path: '/profile' },
+    // { name: 'Profile', icon: ProfileIcon, path: '/profile' },
   ];
 
   return (
@@ -131,14 +131,14 @@ export default function Navbar() {
                   className='rounded-full'
                 />
               ) : (
-                <div className='w-10 h-10 font-bold text-gray-500 dark:text-gray-400 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center'>
+                <div className='w-10 h-10 cursor-pointer font-bold text-gray-500 dark:text-gray-400 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center'>
                   {user.displayName ? user.displayName[0].toUpperCase() : user.email.split('@')[0][0].toUpperCase()}
                 </div>
               )}
-              <div>
-                <p className='font-medium text-gray-800 dark:text-white'>
+              <div className='flex flex-col gap-2'>
+                <Link href='/profile' className='font-medium text-gray-800 dark:text-white cursor-pointer hover:text-gray-600 dark:hover:text-gray-400'>
                   {user.displayName.split(' ')[0] || user.email.split('@')[0]}
-                </p>
+                </Link>
                 <button 
                   onClick={logout} 
                   className='text-xs cursor-pointer text-red-500 hover:text-red-700'

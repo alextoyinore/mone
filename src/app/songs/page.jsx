@@ -9,6 +9,8 @@ import toast from 'react-hot-toast';
 import GridIcon from '@/components/icons/GridIcon';
 import ListIcon from '@/components/icons/ListIcon';
 import PlayIcon from '@/components/icons/PlayIcon';
+import GridSongItem from '@/components/GridSongItem';
+import ListSongItem from '@/components/ListSongItem';
 
 
 export default function SongsPage() {
@@ -142,6 +144,7 @@ export default function SongsPage() {
           </div>
         </div>
 
+        
         {viewMode === 'grid' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {songs.map((song) => {
@@ -190,36 +193,22 @@ export default function SongsPage() {
             })}
           </div>
         ) : (
+          // List View
           <div className="space-y-3">
             {songs.map((song) => {
               const songTitle = parseSongValue(song.name || song.title, 'Unknown Song');
               const songArtist = parseSongValue(song.artist, 'Unknown Artist');
-              const songCoverArt = parseSongValue(song.coverArt, 'https://placehold.co/100x100');
 
               return (
-                <div 
-                  key={song._id} 
-                  className="flex items-center bg-white dark:bg-gray-900 rounded-lg p-3 shadow-md hover:shadow-xl transition-all duration-300 group"
-                >
-                  <Image 
-                    src={songCoverArt} 
-                    alt={songTitle} 
-                    width={100} 
-                    height={100} 
-                    className="w-16 h-16 object-cover rounded-lg mr-4"
-                    onClick={() => playSong(song)}
-                  />
-                  <div className="flex-grow">
-                    <h3 className="font-semibold text-sm text-gray-900 dark:text-white">{songTitle}</h3>
-                    <p className="text-xs text-gray-500">{songArtist}</p>
-                  </div>
-                  <button 
-                    onClick={() => playSong(song)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm hover:bg-blue-600 transition opacity-0 group-hover:opacity-100"
-                  >
-                    Play
-                  </button>
-                </div>
+                <ListSongItem
+                  key={song._id}
+                  song={{
+                    ...song,
+                    title: songTitle,
+                    artist: songArtist
+                  }}
+                  playSong={playSong}
+                />
               );
             })}
           </div>
@@ -244,75 +233,35 @@ export default function SongsPage() {
             </button>
       </div>
 
+      {/* Grid View */}
       {viewMode === 'grid' ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
           {songs.map((song) => {
-            const songTitle = parseSongValue(song.name || song.title, 'Unknown Song');
-            const songArtist = parseSongValue(song.artist, 'Unknown Artist');
-            const songCoverArt = parseSongValue(song.coverArt, 'https://placehold.co/300x300');
+              const songTitle = parseSongValue(song.name || song.title, 'Unknown Song');
+              const songArtist = parseSongValue(song.artist, 'Unknown Artist');
+              const songCoverArt = parseSongValue(song.coverArt, 'https://placehold.co/300x300');
 
-            return (
-              <div 
-                key={song._id} 
-                className="group relative cursor-pointer"
-              >
-                <div className="aspect-square relative overflow-hidden rounded-xl">
-                  <Image 
-                    src={songCoverArt} 
-                    alt={songTitle} 
-                    width={300} 
-                    height={300} 
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    onClick={() => playSong(song)}
-                  />
-                  <button 
-                    onClick={() => playSong(song)}
-                    className="absolute bottom-2 left-2 w-10 h-10 flex items-center justify-center bg-white/20 backdrop-blur-sm text-white rounded-full hover:bg-white/30 transition opacity-0 group-hover:opacity-100"
-                  >
-                    <PlayIcon isActive={false} className="w-6 h-6" />
-                  </button>
-                </div>
-                <div className="mt-2">
-                  <h3 className="font-light text-sm truncate text-gray-900 dark:text-white">{songTitle}</h3>
-                  <p className="text-xs text-gray-500 truncate">{songArtist}</p>
-                </div>
-              </div>
-            );
-          })}
+              return (
+                <GridSongItem
+                  key={song._id}
+                  song={song}
+                  playSong={playSong}
+                  songTitle={songTitle}
+                  songArtist={songArtist}
+                  songCoverArt={songCoverArt}
+                />
+              );
+            })}
         </div>
       ) : (
+        // List View
         <div className="space-y-3">
           {songs.map((song) => (
-            <div 
-              key={song._id} 
-              className="flex items-center bg-white dark:bg-gray-900 rounded-lg p-3 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer"
-            >
-              <Image 
-                src={song.coverArt || 'https://placehold.co/100x100'} 
-                alt={song.title} 
-                width={100} 
-                height={100} 
-                className="w-16 h-16 object-cover rounded-lg mr-4"
-                onClick={() => playSong(song)}
-              />
-              <div className="flex-grow">
-                <h3 className="font-semibold text-sm text-gray-900 dark:text-white">{song.title}</h3>
-                <p className="text-xs text-gray-500 truncate">{song.artist}</p>
-              </div>
-              
-              <button 
-                onClick={() => playSong(song)}
-                className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm hover:bg-blue-600 transition opacity-0 group-hover:opacity-100"
-              >
-                Play
-              </button>
-              <Link 
-                href={`songs/${song._id}`} 
-                className="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-              >
-                View Details
-              </Link>
-            </div>
+            <ListSongItem
+              key={song._id}
+              song={song}
+              playSong={playSong}
+            />
           ))}
         </div>
       )}
