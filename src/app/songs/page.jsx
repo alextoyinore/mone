@@ -47,7 +47,8 @@ export default function SongsPage() {
   const sanitizeSong = (song) => ({
     _id: extractPrimitiveValue(song, ['_id', 'id'], ''),
     title: extractPrimitiveValue(song, ['title', 'name'], 'Unknown Song'),
-    artist: extractPrimitiveValue(song, ['artist', 'name'], 'Unknown Artist'),
+    artist: song.artist?.name || extractPrimitiveValue(song, ['artist', 'name'], 'Unknown Artist'),
+    artistAvatar: song.artist?.avatar || extractPrimitiveValue(song, ['artist', 'avatar'], ''),
     coverArt: extractPrimitiveValue(song, ['coverArt', 'image'], 'https://placehold.co/300x300'),
     audioUrl: extractPrimitiveValue(song, ['audioUrl', 'url'], '')
   });
@@ -111,7 +112,14 @@ export default function SongsPage() {
     // Ensure only primitive values are used
     if (value === null || value === undefined) return fallback;
     if (typeof value === 'string' || typeof value === 'number') return value;
-    if (typeof value === 'object' && value.toString) return value.toString();
+    if (typeof value === 'object') {
+      // Check for nested name property
+      if (value.name) return value.name;
+      // If object has toString method, use it
+      if (value.toString) return value.toString();
+      // Last resort: JSON stringify
+      return JSON.stringify(value);
+    }
     return fallback;
   };
 
@@ -135,11 +143,12 @@ export default function SongsPage() {
         </div>
 
         {viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {songs.map((song) => {
               const songTitle = parseSongValue(song.name || song.title, 'Unknown Song');
               const songArtist = parseSongValue(song.artist, 'Unknown Artist');
               const songCoverArt = parseSongValue(song.coverArt, 'https://placehold.co/300x300');
+              const songArtistAvatar = parseSongValue(song.artistAvatar, '');
 
               return (
                 <div  
@@ -163,7 +172,18 @@ export default function SongsPage() {
                   </div>
                   <div className="p-3">
                     <h3 className="font-semibold text-sm truncate text-gray-900 dark:text-white">{songTitle}</h3>
+                    <div className="flex items-center space-x-2">
+                    {songArtistAvatar && (
+                      <Image 
+                        src={songArtistAvatar} 
+                        alt={songArtist} 
+                        width={24} 
+                        height={24} 
+                        className="rounded-full object-cover"
+                      />
+                    )}
                     <p className="text-xs text-gray-500 truncate">{songArtist}</p>
+                  </div>
                   </div>
                 </div>
               );
@@ -225,7 +245,7 @@ export default function SongsPage() {
       </div>
 
       {viewMode === 'grid' ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
           {songs.map((song) => {
             const songTitle = parseSongValue(song.name || song.title, 'Unknown Song');
             const songArtist = parseSongValue(song.artist, 'Unknown Artist');
@@ -277,7 +297,7 @@ export default function SongsPage() {
               />
               <div className="flex-grow">
                 <h3 className="font-semibold text-sm text-gray-900 dark:text-white">{song.title}</h3>
-                <p className="text-xs text-gray-500">{song.artist}</p>
+                <p className="text-xs text-gray-500 truncate">{song.artist}</p>
               </div>
               
               <button 
