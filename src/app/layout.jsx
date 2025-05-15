@@ -37,7 +37,7 @@ export default function RootLayout({ children }) {
               <SongOptionsProvider>
                 <Navbar />
                 <main className="flex-grow relative overflow-y-auto transition-all duration-300">
-                  <MiniPlayer className="sticky top-0 left-0 right-0 z-50" />
+                  <MiniPlayer className="sticky top-0 left-0 z-50" />
                   {children}
                 </main>
               </SongOptionsProvider>

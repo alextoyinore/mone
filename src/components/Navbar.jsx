@@ -67,11 +67,22 @@ export default function Navbar() {
           </div>
         </Link>
         <button 
-        onClick={() => setIsExpanded(!isExpanded)} 
-        className='absolute top-10 -right-[5px] z-50 text-gray-500 hover:text-gray-700 p-2 dark:text-gray-300 dark:hover:text-gray-400 dark:bg-gray-900 rounded-l-full'
-      >
-        {isExpanded ? '←' : '→'}
-      </button>
+          onClick={() => setIsExpanded(!isExpanded)} 
+          className='absolute top-0 right-0 transition-all duration-300 ease-in-out hover:opacity-75 focus:outline-none cursor-pointer'
+          style={{
+            transform: `rotate(${isExpanded ? '0' : '0'}deg)`,
+            transformOrigin: 'center'
+          }}
+        >
+          <svg 
+            width="20" 
+            height="20" 
+            viewBox="0 0 20 20" 
+            className="fill-gray-800 dark:fill-gray-200"
+          >
+            <path d="M0 0 L20 0 L20 20 L0 0 Z" />
+          </svg>
+        </button>
 
         {/* Search */}
         {isExpanded && (

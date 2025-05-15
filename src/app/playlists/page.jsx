@@ -1,21 +1,21 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
-import { useAuth } from '../../contexts/AuthContext';
+import GridIcon from '@/components/icons/GridIcon';
+import ListIcon from '@/components/icons/ListIcon';
 import AuthRequired from '../../components/AuthRequired';
-import axios from 'axios';
-import toast from 'react-hot-toast';
+import Image from 'next/image';
+
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function PlaylistsPage() {
   const { user } = useAuth();
   const [playlists, setPlaylists] = useState([]);
-  const [newPlaylist, setNewPlaylist] = useState({
-    name: '',
-    description: '',
-    cover: '',
-    isPublic: false
-  });
+  const [newPlaylistName, setNewPlaylistName] = useState('');
+  const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -25,9 +25,20 @@ export default function PlaylistsPage() {
 
       try {
         setLoading(true);
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/playlists`, { user: user.email });
-        setPlaylists(response.data);
-        setLoading(false);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/playlists?user=${user.email}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch playlists');
+      }
+      
+      const data = await response.json();
+      setPlaylists(data);
+      setLoading(false);
       } catch (err) {
         setError('Failed to fetch playlists');
         setLoading(false);
@@ -37,43 +48,61 @@ export default function PlaylistsPage() {
     fetchPlaylists();
   }, [user]);
 
+
   const handleCreatePlaylist = async (e) => {
     e.preventDefault();
-    if (!newPlaylist.name.trim() || !user) {
+    if (!newPlaylistName.trim() || !user) {
       toast.error('Playlist name is required');
       return;
     }
 
+    setIsCreatingPlaylist(true);
+    
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/playlists`, {
-        name: newPlaylist.name,
-        user: user.email,
-        description: newPlaylist.description,
-        cover: newPlaylist.cover,
-        isPublic: newPlaylist.isPublic
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/playlists/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: newPlaylistName,
+          user: user.email
+        })
       });
 
-      setPlaylists([...playlists, response.data]);
-      setNewPlaylist({
-        name: '',
-        description: '',
-        cover: '',
-        isPublic: false
-      });
+
+      const responseBody = await response.text();
+      console.log('Response body:', responseBody);
+
+      if (!response.ok) {
+        throw new Error(`Failed to create playlist: ${responseBody}`);
+      }
+
+      const newPlaylistData = JSON.parse(responseBody);
+      setPlaylists([...playlists, newPlaylistData]);
+      setNewPlaylistName('');
       toast.success('Playlist created successfully');
     } catch (err) {
-      console.error('Failed to create playlist', err);
-      toast.error('Failed to create playlist');
+      console.error('Playlist creation error:', err);
+      toast.error(`Failed to create playlist: ${err.message}`);
+    } finally {
+      setIsCreatingPlaylist(false);
     }
   };
 
   const handleDeletePlaylist = async (playlistId) => {
     try {
-      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/playlists/${playlistId}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/playlists/${playlistId}`, {
+        method: 'DELETE'
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete playlist');
+      }
+
       setPlaylists(playlists.filter(p => p._id !== playlistId));
     } catch (err) {
-      console.error('Failed to delete playlist', err);
-      setError('Failed to delete playlist');
+      toast.error('Failed to delete playlist');
     }
   };
 
@@ -86,85 +115,111 @@ export default function PlaylistsPage() {
   }
 
   return (
-    <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
-      <h1 className="text-3xl font-bold mb-6">My Playlists</h1>
-      
-      <form onSubmit={handleCreatePlaylist} className="mb-6 space-y-4">
-        <div className="flex space-x-2">
-          <input 
-            type="text" 
-            value={newPlaylist.name}
-            onChange={(e) => setNewPlaylist({...newPlaylist, name: e.target.value})}
-            placeholder="Playlist Name"
-            className="flex-grow px-3 py-2 rounded-lg focus:outline-none bg-gray-100 dark:bg-gray-800 dark:text-white"
-          />
-          <div className="flex items-center">
-            <label className="mr-2 text-sm">
-              Public
-              <input 
-                type="checkbox"
-                checked={newPlaylist.isPublic}
-                onChange={(e) => setNewPlaylist({...newPlaylist, isPublic: e.target.checked})}
-                className="ml-2"
-              />
-            </label>
-          </div>
-        </div>
-        <div className="flex space-x-2">
-          <input 
-            type="text" 
-            value={newPlaylist.description}
-            onChange={(e) => setNewPlaylist({...newPlaylist, description: e.target.value})}
-            placeholder="Description (optional)"
-            className="flex-grow px-3 py-2 rounded-lg focus:outline-none bg-gray-100 dark:bg-gray-800 dark:text-white"
-          />
-          <input 
-            type="text" 
-            value={newPlaylist.cover}
-            onChange={(e) => setNewPlaylist({...newPlaylist, cover: e.target.value})}
-            placeholder="Cover URL (optional)"
-            className="flex-grow px-3 py-2 rounded-lg focus:outline-none bg-gray-100 dark:bg-gray-800 dark:text-white"
-          />
-        </div>
-        <button 
-          type="submit" 
-          className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-        >
-          Create Playlist
-        </button>
-      </form>
+    <>
+    <Toaster />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">My Playlists</h1>
+        
+        <form onSubmit={handleCreatePlaylist} className="flex space-x-2">
+          <input 
+            type="text" 
+            value={newPlaylistName}
+            onChange={(e) => setNewPlaylistName(e.target.value)}
+            placeholder="New Playlist Name"
+            className="px-3 py-2 rounded-lg focus:outline-none bg-gray-100 dark:bg-gray-800 dark:text-white w-64"
+          />
+          <button 
+            type="submit" 
+            disabled={isCreatingPlaylist}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isCreatingPlaylist ? 'Creating...' : 'Create'}
+          </button>
+        </form>
+      </div>
+
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex space-x-2">
+          <button
+            onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+            className="p-2 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+            title={`Switch to ${viewMode === 'grid' ? 'list' : 'grid'} view`}
+          >
+            {viewMode === 'grid' ? <ListIcon className="h-5 w-5" /> : <GridIcon className="h-5 w-5" />}
+          </button>
+        </div>
+      </div>
+      <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'flex flex-col'}>
         {playlists.length === 0 ? (
           <div className="col-span-full text-gray-500 dark:text-gray-400">
             No playlists yet. Create your first playlist!
           </div>
         ) : (
           playlists.map((playlist) => (
-          <div 
-            key={playlist._id} 
-            className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition"
-          >
-            <h2 className="text-xl font-semibold mb-2">{playlist.name}</h2>
-            <p className="text-gray-500 dark:text-gray-400">{playlist.songs.length} tracks</p>
-            <div className="mt-4 flex space-x-2">
-              <Link 
-                href={`/playlists/${playlist._id}`} 
-                className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
-              >
-                View
-              </Link>
-              <button 
-                onClick={() => handleDeletePlaylist(playlist._id)}
-                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
-              >
-                Delete
-              </button>
+            // playlist card
+          viewMode === 'grid' ? (
+            <div 
+              key={playlist._id} 
+              className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition"
+            >
+              <h2 className="text-xl font-semibold mb-2">{playlist.name}</h2>
+              <p className="text-gray-500 dark:text-gray-400">{playlist.songs.length} tracks</p>
+              <div className="mt-4 flex space-x-2">
+                <Link 
+                  href={`/playlists/${playlist._id}`} 
+                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
+                >
+                  View
+                </Link>
+                <button 
+                  onClick={() => handleDeletePlaylist(playlist._id)}
+                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div 
+              key={playlist._id}
+              className="flex items-center justify-between odd:bg-white even:bg-gray-50 dark:odd:bg-gray-900 dark:even:bg-gray-800 p-4 transition"
+            >
+              <div className="flex items-center space-x-4">
+                <Image 
+                    src={playlist.cover || 'https://placehold.co/100x100'} 
+                    alt={playlist.name} 
+                    width={60} 
+                    height={60} 
+                    className="w-12 h-12 object-cover rounded-lg mr-4 cursor-pointer"
+                    unoptimized
+                  />
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold">{playlist.name}</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{playlist.songs.length} tracks</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Link 
+                  href={`/playlists/${playlist._id}`}
+                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition text-sm"
+                >
+                  View
+                </Link>
+                <button
+                  onClick={() => handleDeletePlaylist(playlist._id)}
+                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition text-sm"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          )
         )))}
       </div>
     </div>
+    </>
   );
 }
 

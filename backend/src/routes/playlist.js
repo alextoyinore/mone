@@ -1,6 +1,8 @@
 const express = require('express');
+const upload = require('../middleware/upload');
 const Playlist = require('../models/Playlist');
 const Song = require('../models/Song');
+const verifyFirebaseToken = require('../middleware/verifyFirebaseToken');
 const router = express.Router();
 
 // Get all playlists for a user
@@ -17,36 +19,39 @@ router.get('/', async (req, res) => {
 });
 
 // Create a new playlist
-router.post('/', async (req, res) => {
+router.post('/', express.json(), async (req, res) => {
   try {
-    const { name, user, description = "", cover = "", isPublic = false } = req.body;
+    const { name, user } = req.body;
     if (!name || !user) return res.status(400).json({ error: 'Name and user required' });
-    // Generate slug if public
-    let slug = undefined;
-    if (isPublic) {
-      slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Math.random().toString(36).substr(2, 6);
-    }
-    const playlist = new Playlist({ name, user, description, cover, isPublic, slug, songs: [] });
+    
+    const playlist = new Playlist({
+      name,
+      user,
+      songs: []
+    });
+    
     await playlist.save();
+    
     // Notify followers of new playlist
     try {
       const User = require('../models/User');
       const { sendNotification } = require('../utils/notify');
-      const creator = await User.findById(user);
+      const creator = await User.findOne({ email: user });
       if (creator && creator.followers && creator.followers.length > 0) {
         for (const followerId of creator.followers) {
-          const follower = await User.findById(followerId);
+          const follower = await User.findOne({ email: followerId });
           if (follower && follower.email !== creator.email) {
             await sendNotification({
               user: follower.email,
               type: 'new_playlist',
               message: `${creator.fullname || creator.name} created a new playlist: "${playlist.name}"`,
-              link: playlist.isPublic && playlist.slug ? `/playlist/public/${playlist.slug}` : `/playlist/${playlist._id}`
+              link: `/playlist/${playlist._id}`
             });
           }
         }
       }
     } catch (e) { /* ignore notification errors */ }
+    
     res.status(201).json(playlist);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -90,12 +95,31 @@ router.post('/:id/remove', async (req, res) => {
 });
 
 // Update playlist (name, description, cover, isPublic)
-router.put('/:id', async (req, res) => {
+router.put('/:id', upload.single('cover'), async (req, res) => {
   try {
     const { name, description, cover, isPublic } = req.body;
     let update = { name };
     if (description !== undefined) update.description = description;
-    if (cover !== undefined) update.cover = cover;
+
+     // Handle cover file upload
+     let coverPath = '';
+
+     if (req.files && req.files.cover && req.files.cover[0]) {
+       const result = await new Promise((resolve, reject) => {
+         const stream = cloudinary.uploader.upload_stream(
+           { resource_type: 'image', folder: 'playlists/covers' },
+           (error, result) => {
+             if (error) reject(error);
+             else resolve(result);
+           }
+         );
+         stream.end(req.files.cover[0].buffer);
+       });
+       coverPath = result.secure_url;
+     }
+
+    if (cover !== undefined) update.cover = coverPath;
+
     if (isPublic !== undefined) {
       update.isPublic = isPublic;
       if (isPublic) {

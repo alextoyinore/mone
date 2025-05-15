@@ -18,8 +18,16 @@ const upload = multer({
         return cb(new Error('Cover art must be JPG, PNG, or WEBP.'));
       }
     }
+
+    if (file.fieldname === 'cover') {
+      const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      if (!allowedImageTypes.includes(file.mimetype)) {
+        return cb(new Error('Cover must be JPG, PNG, or WEBP.'));
+      }
+    }
     cb(null, true);
   }
 });
+
 module.exports = upload;
 

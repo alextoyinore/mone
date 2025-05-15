@@ -53,7 +53,7 @@ export default function SongOptionsDropdown({ song }) {
             View Song
           </Link>
           <hr className="my-1 border-black/10 dark:border-white/10" />
-          <button 
+          <p 
             onClick={() => {
               // TODO: Implement share functionality
               console.log('Share song', song);
@@ -62,7 +62,7 @@ export default function SongOptionsDropdown({ song }) {
             className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-blue/10 transition cursor-pointer"
           >
             Share
-          </button>
+          </p>
         </div>
       )}
     </div>
