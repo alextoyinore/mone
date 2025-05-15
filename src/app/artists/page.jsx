@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import LoadingSpinner from '@/components/loading/LoadingSpinner';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '../../contexts/AuthContext';
@@ -52,8 +53,31 @@ export default function ArtistsPage() {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [genreFilter, setGenreFilter] = useState('');
+  const [artists, setArtists] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredArtists = SAMPLE_ARTISTS.filter(artist => 
+  // Simulate data fetching
+  useEffect(() => {
+    const fetchArtists = async () => {
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setArtists(SAMPLE_ARTISTS);
+      } catch (error) {
+        console.error('Failed to fetch artists:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArtists();
+  }, []);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  const filteredArtists = artists.filter(artist => 
     artist.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
     (genreFilter ? artist.genre.toLowerCase() === genreFilter.toLowerCase() : true)
   );
@@ -103,8 +127,8 @@ export default function ArtistsPage() {
                   src={artist.coverImage} 
                   alt={artist.name} 
                   layout="fill" 
-                  objectcover="cover" 
-                  className="absolute inset-0"
+                  className="absolute inset-0 object-cover"
+                  unoptimized
                 />
               </div>
               

@@ -33,7 +33,6 @@ export default function GridSongItem({
         </button>
 
         <button 
-          onClick={() => playSong(song)}
           className="absolute bottom-2 right-2 w-10 h-10 flex items-center justify-center bg-white/20 backdrop-blur-sm text-white rounded-full hover:bg-white/30 transition opacity-0 group-hover:opacity-100"
         >
           <SongOptionsDropdown song={song} />

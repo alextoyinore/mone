@@ -91,6 +91,7 @@ export default function FavoritesPage() {
                 width={64} 
                 height={64} 
                 className="w-16 h-16 object-cover rounded-md mr-4" 
+                unoptimized
               />
               
               <div className="flex-grow">

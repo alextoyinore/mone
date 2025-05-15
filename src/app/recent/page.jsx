@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import LoadingSpinner from '@/components/loading/LoadingSpinner';
 import { useAuth } from '../../contexts/AuthContext';
 import AuthRequired from '../../components/AuthRequired';
 import Image from 'next/image';
@@ -38,8 +39,29 @@ const SAMPLE_RECENTLY_PLAYED = [
 
 export default function RecentlyPlayedPage() {
   const { user } = useAuth();
-  const [recentlyPlayed, setRecentlyPlayed] = useState(SAMPLE_RECENTLY_PLAYED);
+  const [recentlyPlayed, setRecentlyPlayed] = useState([]);
   const [filter, setFilter] = useState('all');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRecentlyPlayed = async () => {
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setRecentlyPlayed(SAMPLE_RECENTLY_PLAYED);
+      } catch (error) {
+        console.error('Failed to fetch recently played:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecentlyPlayed();
+  }, []);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   if (!user) {
     return <AuthRequired message="You must be logged in to view recently played songs." />;
@@ -82,7 +104,8 @@ export default function RecentlyPlayedPage() {
                   alt={`${song.title} album cover`} 
                   width={64} 
                   height={64} 
-                  className="rounded-lg"
+                  className="rounded-lg object-cover"
+                  unoptimized
                 />
                 <div>
                   <h3 className="font-semibold text-lg">{song.title}</h3>

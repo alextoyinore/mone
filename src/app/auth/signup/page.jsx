@@ -9,17 +9,20 @@ import toast from 'react-hot-toast';
 import GoogleIcon from '@/components/icons/GoogleIcon';
 import { EyeOpenIcon, EyeClosedIcon } from '@/components/icons/EyeIcons';
 import XitoIcon from '@/assets/icondark.svg';
+import LoadingSpinner from '@/components/loading/LoadingSpinner';
 
 export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { signUpWithEmail, signInWithGoogle } = useAuth();
   const router = useRouter();
 
   const handleEmailSignup = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       await signUpWithEmail(email, password, { displayName });
 
@@ -31,6 +34,7 @@ export default function SignupPage() {
   };
 
   const handleGoogleSignup = async () => {
+    setIsLoading(true);
     try {
       await signInWithGoogle();
       toast.success('Signed up with Google');
@@ -106,7 +110,7 @@ export default function SignupPage() {
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              Sign up
+              {isLoading ? <LoadingSpinner className="h-5 w-5" /> : 'Create Account'}
             </button>
           </div>
         </form>
@@ -129,7 +133,7 @@ export default function SignupPage() {
               className="w-full flex items-center justify-center py-2 px-4 rounded-md text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 bg-gray-200 dark:bg-gray-800"
             >
               <GoogleIcon className="w-5 h-5 mr-2" />
-              Sign up with Google
+              {isLoading ? <LoadingSpinner className="h-5 w-5" /> : 'Sign up with Google'}
             </button>
           </div>
         </div>

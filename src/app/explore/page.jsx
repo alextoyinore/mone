@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import LoadingSpinner from '@/components/loading/LoadingSpinner';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const SAMPLE_PLAYLISTS = [
   { 
@@ -41,8 +43,31 @@ const SAMPLE_PLAYLISTS = [
 export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [genre, setGenre] = useState('');
+  const [playlists, setPlaylists] = useState(SAMPLE_PLAYLISTS);
+  const [loading, setLoading] = useState(true);
 
-  const filteredPlaylists = SAMPLE_PLAYLISTS.filter(playlist => 
+  // Simulate data fetching
+  useEffect(() => {
+    const fetchPlaylists = async () => {
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setPlaylists(SAMPLE_PLAYLISTS);
+      } catch (error) {
+        console.error('Failed to fetch playlists:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlaylists();
+  }, []);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  const filteredPlaylists = playlists.filter(playlist => 
     playlist.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
     (genre ? playlist.genre.toLowerCase() === genre.toLowerCase() : true)
   );
@@ -79,10 +104,11 @@ export default function ExplorePage() {
             key={playlist.id} 
             className="bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
           >
-            <img 
+            <Image 
               src={playlist.coverImage} 
               alt={playlist.name} 
               className="w-full h-48 object-cover"
+              unoptimized
             />
             <div className="p-4">
               <h2 className="text-xl font-semibold mb-2">{playlist.name}</h2>

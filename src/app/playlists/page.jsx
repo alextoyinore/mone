@@ -7,6 +7,9 @@ import GridIcon from '@/components/icons/GridIcon';
 import ListIcon from '@/components/icons/ListIcon';
 import AuthRequired from '../../components/AuthRequired';
 import Image from 'next/image';
+import LoadingSpinner from '@/components/loading/LoadingSpinner';
+import ViewIcon from '@/components/icons/ViewIcon';
+import TrashIcon from '@/components/icons/TrashIcon';
 
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -111,7 +114,7 @@ export default function PlaylistsPage() {
   } 
 
   if (loading) {
-    return <div className="text-center py-8">Loading playlists...</div>;
+    return <LoadingSpinner />;
   }
 
   return (
@@ -162,22 +165,42 @@ export default function PlaylistsPage() {
           viewMode === 'grid' ? (
             <div 
               key={playlist._id} 
-              className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition"
+              className="group relative cursor-pointer"
             >
-              <h2 className="text-xl font-semibold mb-2">{playlist.name}</h2>
-              <p className="text-gray-500 dark:text-gray-400">{playlist.songs.length} tracks</p>
-              <div className="mt-4 flex space-x-2">
+              <div className="aspect-square relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800">
+                {/* Playlist Cover */}
+                <div className="absolute inset-0">
+                  <Image
+                    src={playlist.coverImage || 'https://placehold.co/400x400'}
+                    alt={playlist.name}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                </div>
+
+                {/* Dark Overlay */}
+                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors duration-300" />
+
+                {/* Content */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10">
+                  <h2 className="text-xl font-semibold mb-2 text-white">{playlist.name}</h2>
+                  <p className="text-gray-200 mb-4">{playlist.songs.length} tracks</p>
+                </div>
+                
+                {/* Action Buttons */}
                 <Link 
-                  href={`/playlists/${playlist._id}`} 
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
+                  href={`/playlists/${playlist._id}`}
+                  className="absolute bottom-2 left-2 w-10 h-10 flex items-center justify-center bg-white/20 backdrop-blur-sm text-white rounded-full hover:bg-white/30 transition opacity-0 group-hover:opacity-100 z-20"
                 >
-                  View
+                  <ViewIcon className="w-5 h-5" />
                 </Link>
+                
                 <button 
                   onClick={() => handleDeletePlaylist(playlist._id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+                  className="absolute bottom-2 right-2 w-10 h-10 flex items-center justify-center bg-white/20 backdrop-blur-sm text-white rounded-full hover:bg-white/30 transition opacity-0 group-hover:opacity-100 z-20"
                 >
-                  Delete
+                  <TrashIcon className="w-5 h-5" />
                 </button>
               </div>
             </div>
@@ -203,15 +226,15 @@ export default function PlaylistsPage() {
               <div className="flex items-center space-x-2">
                 <Link 
                   href={`/playlists/${playlist._id}`}
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition text-sm"
+                  className="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition"
                 >
-                  View
+                  <ViewIcon className="w-5 h-5" />
                 </Link>
                 <button
                   onClick={() => handleDeletePlaylist(playlist._id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition text-sm"
+                  className="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 transition"
                 >
-                  Delete
+                  <TrashIcon className="w-5 h-5" />
                 </button>
               </div>
             </div>

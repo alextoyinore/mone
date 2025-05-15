@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
+import LoadingSpinner from '@/components/loading/LoadingSpinner';
 
 export default function SearchPage() {
   const { user, token } = useAuth();
@@ -95,7 +96,7 @@ export default function SearchPage() {
             disabled={isLoading}
             className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-300 disabled:opacity-50"
           >
-            {isLoading ? '⏳' : '🔍'}
+            {isLoading ? <LoadingSpinner className="h-5 w-5" /> : '🔍'}
           </button>
         </div>
       </form>

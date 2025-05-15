@@ -122,8 +122,8 @@ export default function AlbumsPage() {
                   src={album.coverImage} 
                   alt={album.title} 
                   layout="fill" 
-                  objectcover="cover" 
-                  className="absolute inset-0"
+                  className="absolute inset-0 object-cover"
+                  unoptimized
                 />
               </div>
               

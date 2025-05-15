@@ -5,6 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import AuthRequired from '../../components/AuthRequired';
 import Select from 'react-select';
 import { useDropzone } from 'react-dropzone';
+import LoadingSpinner from '@/components/loading/LoadingSpinner';
 
 // Helper function to create initial form data
 const createInitialFormData = () => Object.freeze({
@@ -187,57 +188,62 @@ export default function UploadPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log('Token: ', token);
-    
-    // Validate form
-    const validationErrors = validateForm(formData, songFile);
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
-    // Prepare form data
-    const uploadData = new FormData();
-    uploadData.append('title', formData.title);
-    uploadData.append('genre', formData.genre || '');
-    uploadData.append('album', formData.album || '');
-    uploadData.append('description', formData.description || '');
-    
-    // Append streaming links
-    uploadData.append('links', JSON.stringify(formData.links || {}));
-    
-    // Append files
-    if (songFile) uploadData.append('audio', songFile);
-    if (coverFile) uploadData.append('coverArt', coverFile);
-
-    console.log('Upload Data: ', uploadData);
-
     setIsUploading(true);
-
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/songs/`, {
-        method: 'POST',
-        body: uploadData,
-        headers: {
-          'Authorization': `Bearer ${token}`,
+      console.log('Token: ', token);
+    
+      // Validate form
+      const validationErrors = validateForm(formData, songFile);
+      if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        return;
+      }
+
+      // Prepare form data
+      const uploadData = new FormData();
+      uploadData.append('title', formData.title);
+      uploadData.append('genre', formData.genre || '');
+      uploadData.append('album', formData.album || '');
+      uploadData.append('description', formData.description || '');
+      
+      // Append streaming links
+      uploadData.append('links', JSON.stringify(formData.links || {}));
+      
+      // Append files
+      if (songFile) uploadData.append('audio', songFile);
+      if (coverFile) uploadData.append('coverArt', coverFile);
+
+      console.log('Upload Data: ', uploadData);
+
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/songs/`, {
+          method: 'POST',
+          body: uploadData,
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          }
+        });
+
+        console.log('Response: ', response);
+
+        if (response.ok) {
+          const result = await response.json();
+          alert('Song uploaded successfully!');
+          // Reset form
+          setFormData(createInitialFormData());
+          setSongFile(null);
+          setCoverFile(null);
+          if (songInputRef.current) songInputRef.current.value = '';
+          if (coverInputRef.current) coverInputRef.current.value = '';
+        } else {
+          const errorData = await response.text();
+          alert(`Upload failed: ${errorData}`);
         }
-      });
-
-      console.log('Response: ', response);
-
-      if (response.ok) {
-        const result = await response.json();
-        alert('Song uploaded successfully!');
-        // Reset form
-        setFormData(createInitialFormData());
-        setSongFile(null);
-        setCoverFile(null);
-        if (songInputRef.current) songInputRef.current.value = '';
-        if (coverInputRef.current) coverInputRef.current.value = '';
-      } else {
-        const errorData = await response.text();
-        alert(`Upload failed: ${errorData}`);
+      } catch (error) {
+        console.error('Upload error:', error);
+        alert('An error occurred during upload.');
+      } finally {
+        setIsUploading(false);
       }
     } catch (error) {
       console.error('Upload error:', error);
@@ -483,10 +489,7 @@ export default function UploadPage() {
           >
             {isUploading ? (
               <div className="flex items-center justify-center">
-                <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
+                <LoadingSpinner className="h-5 w-5" />
                 Uploading...
               </div>
             ) : 'Upload Song'}

@@ -24,7 +24,7 @@ export function PlayerProvider({ children }) {
     // Track recently played if user exists
     if (user && songs[index]?._id) {
       try {
-        fetch('http://localhost:5000/api/recently-played', {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/recently-played`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ user: user.email, song: songs[index]._id })
@@ -94,3 +94,5 @@ export function PlayerProvider({ children }) {
     </PlayerContext.Provider>
   );
 }
+
+

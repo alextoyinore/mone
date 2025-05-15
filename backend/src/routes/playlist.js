@@ -18,6 +18,17 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Get a playlist by id
+router.get('/:id', async (req, res) => {
+  try {
+    const playlist = await Playlist.findById(req.params.id).populate('songs');
+    if (!playlist) return res.status(404).json({ error: 'Playlist not found' });
+    res.json(playlist);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Create a new playlist
 router.post('/', express.json(), async (req, res) => {
   try {

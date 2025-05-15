@@ -10,6 +10,9 @@ import NextIcon from '@/components/icons/NextIcon';
 import PreviousIcon from '@/components/icons/PreviousIcon';
 import LoopIcon from '@/components/icons/LoopIcon';
 import ShuffleIcon from '@/components/icons/ShuffleIcon';
+import FavoriteIcon from '@/components/icons/FavoriteIcon';
+import ShareIcon from '@/components/icons/ShareIcon';
+import AddToPlaylistIcon from '@/components/icons/AddToPlaylistIcon';
 
 
 export default function MiniPlayer() {
@@ -23,8 +26,8 @@ export default function MiniPlayer() {
   const songCoverArt = parseSongValue(currentSong.coverArt, 'https://placehold.co/64x64');
 
   return (
-    <div className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-md flex items-center px-4 py-2 z-50 rounded-t-2xl border-t border-gray-200 dark:border-gray-800 transition-all duration-700">
-      <div className="flex items-center space-x-4 w-full">
+    <div className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-md px-4 py-2 z-50 rounded-t-2xl border-t border-gray-200 dark:border-gray-800 transition-all duration-700">
+      <div className="flex items-center justify-between w-full">
         <Image 
           src={songCoverArt} 
           alt={`Cover art for ${songTitle}`}
@@ -33,12 +36,13 @@ export default function MiniPlayer() {
           className="w-16 h-16 object-cover rounded-md"
         />
         
-        <div className="flex-grow">
-          <h3 className="text-sm font-semibold">{songTitle}</h3>
-          <p className="text-xs text-gray-500">{songArtist}</p>
+        <div className="flex flex-col ml-2 space-y-0 w-1/4">
+          <h3 className="text-sm font-semibold truncate">{songTitle}</h3>
+          <p className="text-xs text-gray-500 truncate">{songArtist}</p>
         </div>
         
-        <div className="flex items-center space-x-4">
+        {/* Transport Controls - Centered */}
+        <div className="flex items-center justify-center space-x-4 w-2/4">
           <ShuffleIcon 
             onClick={toggleShuffleMode} 
             isActive={isShuffling}
@@ -75,6 +79,19 @@ export default function MiniPlayer() {
             isActive={loopMode !== 0}
             className="w-5 h-5 text-gray-600 hover:text-blue-600 dark:hover:text-white cursor-pointer"
           />
+        </div>
+
+        {/* Action Buttons - Right */}
+        <div className="flex items-center justify-end space-x-4 w-1/4">
+          <button className="text-gray-600 hover:text-blue-600 transition-colors">
+            <FavoriteIcon className="w-5 h-5" />
+          </button>
+          <button className="text-gray-600 hover:text-blue-600 transition-colors">
+            <ShareIcon className="w-5 h-5" />
+          </button>
+          <button className="text-gray-600 hover:text-blue-600 transition-colors">
+            <AddToPlaylistIcon className="w-5 h-5" />
+          </button>
         </div>
       </div>
       

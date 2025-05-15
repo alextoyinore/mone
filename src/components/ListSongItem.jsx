@@ -47,7 +47,6 @@ export default function ListSongItem({
         ): (
         <>
         <button 
-            onClick={() => playSong(song)}
             className="text-white p-2 rounded-full hover:bg-blue-600 transition opacity-0 group-hover:opacity-100 cursor-pointer">
 
           {showPauseIcon ? (

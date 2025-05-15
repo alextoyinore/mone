@@ -11,6 +11,7 @@ import ListIcon from '@/components/icons/ListIcon';
 import PlayIcon from '@/components/icons/PlayIcon';
 import GridSongItem from '@/components/GridSongItem';
 import ListSongItem from '@/components/ListSongItem';
+import LoadingSpinner from '@/components/loading/LoadingSpinner';
 
 
 export default function SongsPage() {
@@ -98,7 +99,7 @@ export default function SongsPage() {
   }, [user]);
 
   if (loading) {
-    return <div className="text-center py-10">Loading songs...</div>;
+    return <LoadingSpinner />;
   }
 
   if (error) {

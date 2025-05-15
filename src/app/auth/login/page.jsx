@@ -9,16 +9,19 @@ import toast from 'react-hot-toast';
 import GoogleIcon from '@/components/icons/GoogleIcon';
 import { EyeOpenIcon, EyeClosedIcon } from '@/components/icons/EyeIcons';
 import XitoIcon from '@/assets/icondark.svg';
+import LoadingSpinner from '@/components/loading/LoadingSpinner';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { signInWithEmail, signInWithGoogle } = useAuth();
   const router = useRouter();
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       await signInWithEmail(email, password);
       toast.success('Logged in successfully');
@@ -29,6 +32,7 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = async () => {
+    setIsLoading(true);
     try {
       await signInWithGoogle();
       toast.success('Logged in with Google');
@@ -114,7 +118,7 @@ export default function LoginPage() {
               className="w-full flex items-center justify-center py-2 px-4 rounded-md  text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 bg-gray-200 dark:bg-gray-800"
             >
               <GoogleIcon className="w-5 h-5 mr-2" />
-              Sign in with Google
+              {isLoading ? <LoadingSpinner className="h-5 w-5" /> : 'Sign in with Google'}
             </button>
           </div>
         </div>

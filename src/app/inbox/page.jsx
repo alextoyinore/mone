@@ -11,7 +11,7 @@ const SAMPLE_CONVERSATIONS = [
     id: '1',
     user: {
       name: 'Alex Rodriguez',
-      avatar: 'https://placehold.co/',
+      avatar: 'https://placehold.co/150x150',
       lastSeen: '2 hours ago'
     },
     lastMessage: {
@@ -24,7 +24,7 @@ const SAMPLE_CONVERSATIONS = [
     id: '2',
     user: {
       name: 'Sarah Thompson',
-      avatar: 'https://placehold.co/',
+      avatar: 'https://placehold.co/150x150',
       lastSeen: '1 day ago'
     },
     lastMessage: {
@@ -37,7 +37,7 @@ const SAMPLE_CONVERSATIONS = [
     id: '3',
     user: {
       name: 'Music Collective',
-      avatar: 'https://placehold.co/',
+      avatar: 'https://placehold.co/150x150',
       lastSeen: '3 days ago'
     },
     lastMessage: {
@@ -104,6 +104,7 @@ export default function InboxPage() {
                 width={48} 
                 height={48} 
                 className="rounded-full mr-4"
+                unoptimized
               />
               <div className="flex-grow">
                 <div className="flex justify-between">
@@ -136,6 +137,7 @@ export default function InboxPage() {
                 width={64} 
                 height={64} 
                 className="rounded-full mr-4"
+                unoptimized
               />
               <div>
                 <h2 className="text-xl font-semibold">

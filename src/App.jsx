@@ -40,6 +40,7 @@ import Register from "./pages/Register";
 import './index.css';
 
 import { ThemeProvider } from "./ThemeContext";
+import PlaylistsPage from "./app/playlists/page";
 
 export default function App() {
   return (
@@ -76,6 +77,7 @@ export default function App() {
                     <Route path="followed" element={<FollowedArtists />} />
                     <Route path="feed" element={<Feed />} />
                     <Route path="playlist/public/:slug" element={<PublicPlaylist />} />
+                    <Route path="playlist/:id" element={<PlaylistsPage />} />
                     <Route path="song/public/:id" element={<PublicSong />} />
                     <Route path="artist-dashboard" element={<ArtistDashboard />} />
                     <Route path="admin-dashboard" element={<AdminDashboard />} />
