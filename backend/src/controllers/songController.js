@@ -15,7 +15,7 @@ exports.createSong = async (req, res) => {
     console.log('req.body: ', req.body);
     
     // Validation
-    const { title, genre, description, album = '' } = req.body;
+    const { title, genre, description, lyrics, album, language, releaseDate, duration } = req.body;
     if (!title) return res.status(400).json({ error: 'Title is required.' });
     
     // User is already authenticated and attached to req by middleware
@@ -96,6 +96,10 @@ exports.createSong = async (req, res) => {
       album,
       genre,
       description,
+      lyrics,
+      language,
+      releaseDate,
+      duration,
       audioUrl,
       coverArt: coverArtUrl,
       links,

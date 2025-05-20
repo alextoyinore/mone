@@ -60,40 +60,46 @@ export default function PlaylistDetailPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row items-start md:items-center gap-8 mb-12">
-        <div className="relative aspect-square w-48 md:w-64">
+    <div className="container mx-auto">
+      {/* Full-width Header Section */}
+      <div className="relative mb-12">
+        <div className="relative h-[30vh] md:h-[40vh] lg:h-[50vh] w-full overflow-hidden">
           <Image
-            src={playlist.coverImage || 'https://placehold.co/400x400'}
+            src={playlist.cover || 'https://placehold.co/400x400'}
             alt={playlist.name}
             fill
-            className="object-cover rounded-xl shadow-lg"
+            className="object-cover"
             unoptimized
           />
+          <div className="absolute inset-0 bg-black/40" />
         </div>
         
-        <div className="flex-1">
-          <h1 className="text-4xl font-bold mb-4">{playlist.name}</h1>
-          <div className="flex items-center gap-4 mb-6">
-            <p className="text-gray-600 dark:text-gray-400">
-              {playlist.songs?.length || 0} tracks
-            </p>
-            <button
-              onClick={handlePlayAll}
-              className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition flex items-center gap-2"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                <path fillRule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clipRule="evenodd" />
-              </svg>
-              Play All
-            </button>
+        <div className="absolute inset-x-0 bottom-0 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-6xl font-bold text-white mb-2">{playlist.name}</h1>
+              <p className="text-gray-300 mb-4">
+                {playlist.songs?.length || 0} tracks
+              </p>
+              {playlist.description && (
+                <p className="text-gray-300 mb-4">
+                  {playlist.description}
+                </p>
+              )}
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handlePlayAll}
+                className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition flex items-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                  <path fillRule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clipRule="evenodd" />
+                </svg>
+                Play All
+              </button>
+            </div>
           </div>
-          {playlist.description && (
-            <p className="text-gray-700 dark:text-gray-300 mb-4">
-              {playlist.description}
-            </p>
-          )}
         </div>
       </div>
 

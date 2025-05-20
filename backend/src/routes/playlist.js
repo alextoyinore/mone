@@ -30,7 +30,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create a new playlist
-router.post('/', express.json(), async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { name, user } = req.body;
     if (!name || !user) return res.status(400).json({ error: 'Name and user required' });

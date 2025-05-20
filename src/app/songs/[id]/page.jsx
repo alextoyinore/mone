@@ -11,37 +11,69 @@ import PlayIcon from '@/components/icons/PlayIcon';
 import PauseIcon from '@/components/icons/PauseIcon';
 import FavoriteIcon from '@/components/icons/FavoriteIcon';
 import ShareIcon from '@/components/icons/ShareIcon';
+import QueueIcon from '@/components/icons/QueueIcon';
 import LoadingSpinner from '@/components/loading/LoadingSpinner';
 
 export default function SongDetailPage() {
   const { id } = useParams();
   const { user } = useAuth();
-  const { currentSong, isPlaying, togglePlayPause, playSong, setSongsForPlayback, setCurrentTrack, addToQueue } = useAudioPlayer();
+  const { currentSong, isPlaying, togglePlayPause, setSongsForPlayback, addToQueue, playSong } = useAudioPlayer();
   const [song, setSong] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSong = async () => {
       try {
+        console.log('Fetching song with ID:', id);
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/songs/${id}`);
-        if (!response.ok) throw new Error('Failed to fetch song');
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Fetch response not ok:', {
+            status: response.status,
+            statusText: response.statusText,
+            errorText
+          });
+          throw new Error(`Failed to fetch song: ${response.status}`);
+        }
+        
         const data = await response.json();
+        
+        // Extensive logging of fetched song data
+        console.log('Fetched song data:', {
+          id: data._id,
+          title: data.title,
+          audioUrl: data.audioUrl,
+          artist: data.artist?.name,
+          fullData: data
+        });
+
+        // Validate critical song properties
+        const requiredProps = ['_id', 'title', 'audioUrl', 'artist'];
+        const missingProps = requiredProps.filter(prop => {
+          if (prop === 'artist') return !data.artist?._id;
+          return !data[prop];
+        });
+
+        if (missingProps.length > 0) {
+          console.error('Song is missing critical properties:', missingProps);
+          toast.error(`Incomplete song data: ${missingProps.join(', ')}`);
+        }
+
         setSong(data);
       } catch (error) {
-        console.error('Error fetching song:', error);
-        toast.error('Failed to load song');
+        console.error('Comprehensive error fetching song:', {
+          error,
+          url: `${process.env.NEXT_PUBLIC_API_URL}/api/songs/${id}`
+        });
+        toast.error('Failed to load song details');
       } finally {
         setLoading(false);
       }
     };
 
     fetchSong();
-  }, [id]);
-
-  const handlePlaySong = () => {
-    if (!song) return;
-    setCurrentTrack(song);
-  };
+  }, [id, toast]);
 
   const handleAddToQueue = () => {
     if (!song) return;
@@ -94,19 +126,60 @@ export default function SongDetailPage() {
 
   const isCurrentSong = currentSong?._id === song._id;
 
+
   const handlePlayClick = () => {
-    if (isCurrentSong) {
-      togglePlayPause();
-    } else {
+    try {
+      // First, set the song as the current track
       setSongsForPlayback([song]);
-      playSong(0);
+      
+      // Then play it
+      playSong(song);
+      
+      // If we're already playing, toggle pause
+      if (isPlaying) {
+        togglePlayPause();
+      }
+    } catch (error) {
+      console.error('Error playing song:', error);
+      toast.error('Failed to play song');
     }
   };
+
+  const handleAddToFavorites = () => {
+    if (!user) {
+      toast.error('Please sign in to add to favorites');
+      return;
+    }
+    if (user.favorites?.includes(song._id)) {
+      toast.error('Song is already in favorites');
+      return;
+    }
+    const updatedUser = {
+      ...user,
+      favorites: [...(user.favorites || []), song._id],
+    };
+    updateUser(updatedUser);
+    toast.success('Song added to favorites');
+  };
+
+  const handleRemoveFromFavorites = () => {
+    if (!user) {
+      toast.error('Please sign in to remove from favorites');
+      return;
+    }
+    const updatedUser = {
+      ...user,
+      favorites: user.favorites?.filter((id) => id !== song._id),
+    };
+    updateUser(updatedUser);
+    toast.success('Song removed from favorites');
+  };
+
 
   return (
     <div className="">
       {/* Full-width Cover Art */}
-      <div className="relative w-full h-[30vh] md:h-[40vh] lg:h-[50vh]">
+      <div className="relative w-full h-[40vh] md:h-[50vh] lg:h-[60vh]">
         <Image
           src={song.coverArt || 'https://placehold.co/1920x1080'}
           alt={song.title}
@@ -114,95 +187,86 @@ export default function SongDetailPage() {
           className="object-cover"
           unoptimized
         />
-        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 text-white p-6 md:p-12 flex flex-wrap items-center">
+          <div className="container mx-auto">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">{song.title}</h1>
+            <div className="flex flex-wrap items-center gap-4 text-sm md:text-base">
+              <span>{song.artist?.name}</span>
+              <span className="mx-2 opacity-50">•</span>
+              <span>{song.genre}</span>
+              <span className="mx-2 opacity-50">•</span>
+              <span>{song.duration}</span>
+              <span className="mx-2 opacity-50">•</span>
+              <span>{song.plays || 0} plays</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-4 text-sm md:text-base mt-4">
+              <span>Album: {song.album || 'Single'}</span>
+              <span className="mx-2 opacity-50">•</span>
+              <span>Release Date: {new Date(song.createdAt).toLocaleDateString()}</span>
+              <span className="mx-2 opacity-50">•</span>
+              <span>Likes: {song.likes?.length || 0}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 mt-6">
+            <button
+              onClick={handlePlayClick}
+              className="bg-green-500 cursor-pointer text-sm text-white px-6 py-2 rounded-full hover:bg-green-600 transition flex items-center gap-2"
+            >
+              {isPlaying && currentSong?._id === song._id ? (
+                <PauseIcon className="w-5 h-5" />
+              ) : (
+                <PlayIcon className="w-5 h-5" />
+              )}
+              {isPlaying && currentSong?._id === song._id ? 'Pause' : 'Play'}
+            </button>
+
+            
+            {user && (
+              <button
+                onClick={handleAddToQueue}
+                className="dark:bg-white/10 cursor-pointer bg-black/10 text-sm text-white px-4 py-2 rounded-full hover:dark:bg-white/20 hover:bg-black/20 transition flex items-center gap-2"
+              >
+                <QueueIcon className="w-5 h-5" />
+                {isCurrentSong ? 'Remove from Queue' : 'Add to Queue'}
+              </button>
+            )}
+
+            {user?.favorites?.includes(song._id) ? (
+                <button
+                  onClick={handleRemoveFromFavorites}
+                  className="dark:bg-white/10 cursor-pointer bg-black/10 text-sm text-white px-4 py-2 rounded-full hover:dark:bg-white/20 hover:bg-black/20 transition flex items-center gap-2"
+                >
+                  <FavoriteIcon className="w-5 h-5" />
+                  Remove from Favorites
+                </button>
+              ) : (
+                <button
+                  onClick={handleAddToFavorites}
+                  className="dark:bg-white/10 cursor-pointer bg-black/10 text-sm text-white px-4 py-2 rounded-full hover:dark:bg-white/20 hover:bg-black/20 transition flex items-center gap-2"
+                >
+                  <FavoriteIcon className="w-5 h-5" />
+                  Add to Favorites
+                </button>
+              )}
+
+            <button
+              onClick={handleShare}
+              className="dark:bg-white/10 cursor-pointer bg-black/10 text-sm text-white px-4 py-2 rounded-full hover:dark:bg-white/20 hover:bg-black/20 transition flex items-center gap-2"
+            >
+              <ShareIcon className="w-5 h-5" />
+              Share
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Song Details Container */}
-      <div className="container mx-auto px-4 py-8 -mt-16 relative z-10">
-        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl p-6 md:p-12">
-          {/* Song Header */}
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-8 mb-12">
-            <div className="relative aspect-square w-48 md:w-64 -mt-24 md:-mt-32 shadow-xl rounded-xl overflow-hidden">
-              <Image
-                src={song.coverArt || 'https://placehold.co/400x400'}
-                alt={song.title}
-                fill
-                className="object-cover"
-                unoptimized
-              />
-            </div>
-          </div>
-
-          {/* Song Details */}
-          <div className="flex-1">
-            <h1 className="text-6xl font-bold mb-2">{song.title}</h1>
-            
-            <Link 
-              href={`/artists/${song.artist?._id}`}
-              className="text-xl text-gray-600 dark:text-gray-400 hover:underline mb-6 block"
-            >
-              {song.artist?.name || 'Unknown Artist'}
-            </Link>
-
-            <div className="flex items-center gap-4 mb-6">
-              <button
-                onClick={handlePlayClick}
-                className="text-gray-600 hover:text-gray-800 transition-colors cursor-pointer"
-              >
-                {isCurrentSong ? (
-                  isPlaying ? <PauseIcon className="w-8 h-8" /> : <PlayIcon className="w-8 h-8" />
-                ) : (
-                  <PlayIcon className="w-8 h-8" />
-                )}
-              </button>
-
-              <button className="text-gray-600 hover:text-gray-800 transition-colors">
-                <FavoriteIcon className="w-8 h-8" />
-              </button>
-
-              <button className="text-gray-600 hover:text-gray-800 transition-colors">
-                <ShareIcon className="w-8 h-8" />
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Song Info</h2>
-                <dl className="space-y-2">
-                  <div>
-                    <dt className="text-gray-500 dark:text-gray-400">Album</dt>
-                    <dd>{song.album || 'Single'}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-gray-500 dark:text-gray-400">Genre</dt>
-                    <dd>{song.genre || 'Not specified'}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-gray-500 dark:text-gray-400">Release Date</dt>
-                    <dd>{new Date(song.createdAt).toLocaleDateString()}</dd>
-                  </div>
-                </dl>
-              </div>
-
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Stats</h2>
-                <dl className="space-y-2">
-                  <div>
-                    <dt className="text-gray-500 dark:text-gray-400">Plays</dt>
-                    <dd>{song.plays || 0}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-gray-500 dark:text-gray-400">Likes</dt>
-                    <dd>{song.likes?.length || 0}</dd>
-                  </div>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-
+      <div className="container mx-auto px-4 py-8 relative z-10">
+        
         {/* Song Description */}
-        <div className="mt-12">
+        <div className="">
           <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">About This Song</h2>
           <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
             {song.description || 'No description available.'}

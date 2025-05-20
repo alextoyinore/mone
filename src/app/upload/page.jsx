@@ -5,7 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import AuthRequired from '../../components/AuthRequired';
 import Select from 'react-select';
 import { useDropzone } from 'react-dropzone';
-import LoadingSpinner from '@/components/loading/LoadingSpinner';
+import AnimatedSpinner from '@/components/loading/AnimatedSpinner';
 
 // Helper function to create initial form data
 const createInitialFormData = () => Object.freeze({
@@ -488,8 +488,8 @@ export default function UploadPage() {
             className="w-full my-6 bg-blue-600 cursor-pointer text-white py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isUploading ? (
-              <div className="flex items-center justify-center">
-                <LoadingSpinner className="h-5 w-5" />
+              <div className="flex items-center justify-center gap-4">
+                <AnimatedSpinner className="h-5 w-5 bg-white" />
                 Uploading...
               </div>
             ) : 'Upload Song'}

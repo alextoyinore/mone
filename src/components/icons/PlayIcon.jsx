@@ -6,7 +6,7 @@ export default function PlayIcon({ className = 'w-6 h-6', isActive = false }) {
       xmlns="http://www.w3.org/2000/svg" 
       viewBox="0 0 24 24" 
       fill="currentColor" 
-      className={`${className} ${isActive ? 'text-white' : 'text-white'}`}
+      className={`${className} ${isActive ? 'text-gray-600 cursor-pointer' : 'text-gray-400 cursor-pointer'}`}
     >
       <path 
         fillRule="evenodd" 

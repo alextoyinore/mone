@@ -9,6 +9,7 @@ import NotificationsPanel from './NotificationsPanel';
 import ThemeSwitcher from './ThemeSwitcher';
 import Image from 'next/image';
 import XitoIcon from '../assets/icondark.svg';
+import XitoIconBlue from '../assets/iconblue.svg';
 import HomeIcon from './icons/HomeIcon';
 import SearchIcon from './icons/SearchIcon';
 import NotificationIcon from './icons/NotificationIcon';
@@ -40,18 +41,17 @@ export default function Navbar() {
 
   const sidebarItems = [
     { name: 'Home', icon: HomeIcon, path: '/' },
-    { name: 'Search', icon: SearchIcon, path: '/search' },
-    { name: 'Notifications', icon: NotificationIcon, onClick: () => setNotifOpen((o) => !o) },
-    { name: 'Theme', icon: ThemeIcon, onClick: () => setThemeOpen((o) => !o) },
-    { name: 'Inbox', icon: MessageIcon, path: '/inbox' },
-    { name: 'Artists', icon: ArtistIcon, path: '/artists' },
-    { name: 'Albums', icon: AlbumIcon, path: '/albums' },
+    // { name: 'Search', icon: SearchIcon, path: '/search' },
+    // { name: 'Notifications', icon: NotificationIcon, onClick: () => setNotifOpen((o) => !o) },
+    // { name: 'Theme', icon: ThemeIcon, onClick: () => setThemeOpen((o) => !o) },
+    // { name: 'Artists', icon: ArtistIcon, path: '/artists' },
+    // { name: 'Albums', icon: AlbumIcon, path: '/albums' },
     { name: 'Songs', icon: SongIcon, path: '/songs' },
     { name: 'Upload', icon: UploadIcon, path: '/upload' },
     { name: 'Favorites', icon: FavoriteIcon, path: '/favorites' },
     { name: 'Recently Played', icon: RecentIcon, path: '/recent' },
     { name: 'Playlists', icon: PlaylistIcon, path: '/playlists' },
-    // { name: 'Profile', icon: ProfileIcon, path: '/profile' },
+    { name: 'Inbox', icon: MessageIcon, path: '/inbox' },
   ];
 
   return (
@@ -60,9 +60,10 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/">
           <div className='flex items-center cursor-pointer gap-1 mb-6 ml-2'>
-            <Image src={XitoIcon} alt="Logo" width={28} height={28} />
+            <Image src={XitoIcon} alt="Logo" className='block dark:hidden' width={28} height={28} />
+            <Image src={XitoIconBlue} alt="Logo" width={28} className='hidden dark:block' height={28} />
             {isExpanded && (
-              <span className='text-xl font-bold text-gray-800 dark:text-white'>itoplay</span>
+              <span className='text-xl font-bold text-black dark:text-blue-500'>itoplay</span>
             )}
           </div>
         </Link>
@@ -113,7 +114,7 @@ export default function Navbar() {
                 key={item.name} 
                 href={item.path} 
                 className={`flex items-center text-sm ${isExpanded ? 'space-x-3 px-3 py-2' : 'justify-center p-2'} rounded-lg transition text-gray-700 dark:text-gray-300 ${pathname === item.path 
-                  ? 'bg-gray-200 dark:bg-gray-900 text-gray-900 dark:text-white' 
+                  ? 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white' 
                   : 'hover:bg-gray-200 dark:hover:bg-gray-900 dark:hover:text-gray-400'}`}
               >
                 <item.icon className={`w-4 h-4 ${isExpanded ? '' : 'w-5 h-5 cursor-pointer mx-auto'}`} />
@@ -136,7 +137,7 @@ export default function Navbar() {
 
         {/* User Profile or Login */}
         {user && isExpanded ? (
-          <div className='mt-6 border-t border-gray-200 dark:border-gray-800 pt-4 text-sm'>
+          <div className='absolute bottom-0 left-0 w-full px-5 py-3 border-t border-gray-200 dark:border-gray-800 pt-4 text-sm'>
             <div className='flex items-center space-x-3'>
               {user.photoURL ? (
                 <Image 
@@ -151,7 +152,7 @@ export default function Navbar() {
                   {user.displayName ? user.displayName[0].toUpperCase() : user.email.split('@')[0][0].toUpperCase()}
                 </div>
               )}
-              <div className='flex flex-col gap-2'>
+              <div className='flex flex-col items-start gap-1'>
                 <Link href='/profile' className='font-medium text-gray-800 dark:text-white cursor-pointer hover:text-gray-600 dark:hover:text-gray-400'>
                   {user.displayName.split(' ')[0] || user.email.split('@')[0]}
                 </Link>
@@ -176,6 +177,28 @@ export default function Navbar() {
             </div>
           )
         )}
+
+        {
+          user && !isExpanded && (
+            <div className='absolute bottom-0 left-0 w-full px-5 py-3 border-t border-gray-200 dark:border-gray-800 pt-4 text-sm'>
+            <div className='flex items-center space-x-3'>
+              {user.photoURL ? (
+                <Image 
+                  src={user.photoURL} 
+                  alt="Profile" 
+                  width={40} 
+                  height={40} 
+                  className='rounded-full'
+                />
+              ) : (
+                <div className='w-10 h-10 cursor-pointer font-bold text-gray-500 dark:text-gray-400 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center'>
+                  {user.displayName ? user.displayName[0].toUpperCase() : user.email.split('@')[0][0].toUpperCase()}
+                </div>
+              )}
+            </div>
+          </div>
+          )
+        }
       </nav>
 
       {/* Notifications Panel */}

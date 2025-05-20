@@ -6,6 +6,11 @@ const songSchema = new mongoose.Schema({
   audioUrl: { type: String, required: true }, // Cloudinary URL
   coverArt: { type: String }, // Cloudinary URL
   genre: { type: String },
+  description: { type: String },
+  releaseDate: { type: Date },
+  lyrics: { type: String },
+  album: { type: mongoose.Schema.Types.ObjectId, ref: 'Album' },
+  language: { type: String },
   duration: { type: Number }, // in seconds
   plays: { type: Number, default: 0 },
   likes: [{ type: String }], // user emails or ids
