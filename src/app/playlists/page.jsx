@@ -115,17 +115,30 @@ export default function PlaylistsPage() {
   } 
 
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="bg-white dark:bg-black min-h-[calc(100vh-5em)] flex justify-center items-center">
+        <LoadingSpinner />
+      </div>
+    );  
+  }
+
+  if (error) {
+    return (
+      <div className="bg-white dark:bg-black min-h-[calc(100vh-5em)] flex justify-center items-center">
+        <div className="text-red-500 text-center">{error}</div>
+      </div>
+    );
   }
 
   return (
     <>
     <Toaster />
 
-    <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+    <div className="min-h-screen p-8 bg-white dark:bg-black text-gray-900 dark:text-white">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">My Playlists</h1>
         
+        <div className="flex space-x-5 justify-between">
         <form onSubmit={handleCreatePlaylist} className="flex space-x-2">
           <input 
             type="text" 
@@ -142,10 +155,7 @@ export default function PlaylistsPage() {
             {isCreatingPlaylist ? 'Creating...' : 'Create'}
           </button>
         </form>
-      </div>
 
-      <div className="flex justify-between items-center mb-6">
-        <div></div>
         <div className="flex space-x-2">
           <button
             onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
@@ -155,8 +165,10 @@ export default function PlaylistsPage() {
             {viewMode === 'grid' ? <ListIcon className="h-5 w-5" /> : <GridIcon className="h-5 w-5" />}
           </button>
         </div>
+        </div>
       </div>
-      <div className={viewMode === 'grid' ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6' : 'flex flex-col'}>
+
+      <div className={viewMode === 'grid' ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5' : 'flex flex-col'}>
         {playlists.length === 0 ? (
           <div className="col-span-full text-gray-500 dark:text-gray-400">
             No playlists yet. Create your first playlist!
@@ -182,13 +194,7 @@ export default function PlaylistsPage() {
                     />
                   
                   {/* Dark Overlay */}
-                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors duration-300" />
-
-                  {/* Content */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10">
-                    <h2 className="text-xl font-semibold mb-2 text-white">{playlist.name}</h2>
-                    <p className="text-gray-200 mb-4">{playlist.songs.length} tracks</p>
-                  </div>
+                  <div className="absolute inset-0 bg-black/10 group-hover:bg-black/50 transition-colors duration-300" />
                   
                   {/* Action Buttons */}
                   <button 
@@ -205,6 +211,11 @@ export default function PlaylistsPage() {
                     <TrashIcon className="w-5 h-5" />
                   </button>
                 </div>
+                {/* Content */}
+                <div className="flex flex-col text-gray-700 mt-2">
+                    <h2 className="text-xs">{playlist.name}</h2>
+                    <p className="text-xs">{playlist.songs.length} tracks</p>
+                  </div>
               </Link>
             </div>
           ) : (

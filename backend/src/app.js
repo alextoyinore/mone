@@ -25,7 +25,6 @@ app.use('/api/albums', require('./routes/album'));
 app.use('/api/follow', require('./routes/follow'));
 app.use('/api/analytics', require('./routes/analytics'));
 app.use('/api/analytics-admin', require('./routes/analyticsAdmin'));
-app.use('/api/recently-played', require('./routes/recentlyPlayed'));
 app.use('/api/feed', require('./routes/feed'));
 app.use('/api/trending', require('./routes/trending'));
 app.use('/api/users', require('./routes/user'));

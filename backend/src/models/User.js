@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
     follows: { type: Boolean, default: true },
     system: { type: Boolean, default: true }
   },
+  recentlyPlayed: [{
+    song: { type: mongoose.Schema.Types.ObjectId, ref: 'Song' },
+    playedAt: { type: Date, default: Date.now }
+  }], 
   role: { type: String, enum: ['artist', 'user', 'admin'], default: 'user' },
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],

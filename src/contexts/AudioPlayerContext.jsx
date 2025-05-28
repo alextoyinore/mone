@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useState, useRef, useContext, useEffect, useCallback } from 'react';
+import axios from 'axios';
 
 const AudioPlayerContext = createContext(null);
 
@@ -178,6 +179,26 @@ export const AudioPlayerProvider = ({ children }) => {
         setIsPlaying(false);
       });
       setIsPlaying(true);
+
+      // Add to recently played
+      const token = localStorage.getItem('userToken');
+      if (token) {
+        axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/recently-played/`,
+          { song: songData._id },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          }
+        ).then(() => {
+          console.log('Song added to recently played');
+        })
+        .catch(error => {
+          console.error('Error adding to recently played:', error);
+        });
+      }
+
     } catch (error) {
       console.error('Unexpected error in playSong:', error);
       setCurrentSong(null);

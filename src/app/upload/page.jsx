@@ -259,13 +259,30 @@ export default function UploadPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-gray-50 dark:bg-gray-900">
-      <div className="w-full max-md:w-[90%] bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8">
-        <div className="text-center mb-8">
+      <div className="w-full max-md:w-[90%] p-4">
+        <div className='flex justify-between items-start'>
+        <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Upload Song</h1>
           <p className="text-gray-600 dark:text-gray-300 mt-2">Share your music with the world</p>
         </div>
+
+        <button 
+            type="submit" 
+            disabled={isUploading}
+            onClick={handleSubmit}
+            className="bg-blue-600 cursor-pointer text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isUploading ? (
+              <div className="flex items-center justify-center gap-4">
+                <AnimatedSpinner className="h-5 w-5" />
+                Uploading...
+              </div>
+            ) : 'Upload Song'}
+          </button> 
+        </div>
         
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6">
+        
+        <form className="flex gap-6">
           <div>
             <div className='space-y-6'>
               <label className="block mb-2 text-sm font-medium">Song Title *</label>
@@ -459,7 +476,7 @@ export default function UploadPage() {
             </div>
           </div>
 
-          <div className='my-6'>
+          {/* <div className='my-6'>
             <label className="block mb-2 text-sm font-medium">Album</label>
             <input 
               type="text" 
@@ -469,7 +486,7 @@ export default function UploadPage() {
               placeholder="Enter album name (optional)"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
             />
-          </div>
+          </div> */}
 
           <div className="flex items-center">
             <input 
@@ -481,19 +498,6 @@ export default function UploadPage() {
             />
             <label className="text-sm">Explicit Content</label>
           </div>
-
-          <button 
-            type="submit" 
-            disabled={isUploading}
-            className="w-full my-6 bg-blue-600 cursor-pointer text-white py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isUploading ? (
-              <div className="flex items-center justify-center gap-4">
-                <AnimatedSpinner className="h-5 w-5 bg-white" />
-                Uploading...
-              </div>
-            ) : 'Upload Song'}
-          </button> 
 
           </div>
 

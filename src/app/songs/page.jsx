@@ -39,12 +39,14 @@ export default function SongsPage() {
     return fallback;
   };
 
+
   // Set songs for playback when songs are loaded
   useEffect(() => {
     if (songs.length > 0) {
       setSongsForPlayback(songs);
     }
   }, [songs, setSongsForPlayback]);
+
 
   // Sanitize song object to ensure only primitive values are used
   const sanitizeSong = (song) => ({
@@ -55,6 +57,7 @@ export default function SongsPage() {
     coverArt: extractPrimitiveValue(song, ['coverArt', 'image'], 'https://placehold.co/300x300'),
     audioUrl: extractPrimitiveValue(song, ['audioUrl', 'url'], '')
   });
+
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -81,7 +84,6 @@ export default function SongsPage() {
         }
 
         const data = await response.json();
-        console.log('data: ', data);
         
         // Sanitize each song before setting state
         const sanitizedSongs = data.map(sanitizeSong);
@@ -98,17 +100,24 @@ export default function SongsPage() {
     fetchSongs();
   }, [user]);
 
+
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="bg-white dark:bg-black min-h-[60vh] flex justify-center items-center">
+        <LoadingSpinner />
+      </div>
+    );
   }
+
 
   if (error) {
     return (
-      <div className="p-4 bg-white dark:bg-black min-h-screen">
+      <div className="bg-white dark:bg-black min-h-[60vh] flex justify-center items-center">
         <div className="text-red-500 text-center">{error}</div>
       </div>
     );
   }
+
 
   // Defensive parsing of song value
   const parseSongValue = (value, fallback = '') => {
@@ -126,9 +135,10 @@ export default function SongsPage() {
     return fallback;
   };
 
+
   if (!songs || songs.length === 0) {
     return (
-      <div className="p-4 bg-white dark:bg-black min-h-screen">
+      <div className="bg-white dark:bg-black min-h-[calc(100vh-5em)] p-4">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Songs</h1>
           <div className="flex items-center space-x-2">
@@ -147,7 +157,7 @@ export default function SongsPage() {
 
         
         {viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
             {songs.map((song) => {
               const songTitle = parseSongValue(song.name || song.title, 'Unknown Song');
               const songArtist = parseSongValue(song.artist, 'Unknown Artist');
@@ -219,7 +229,7 @@ export default function SongsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Songs</h1>
         <button
@@ -236,7 +246,7 @@ export default function SongsPage() {
 
       {/* Grid View */}
       {viewMode === 'grid' ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
           {songs.map((song) => {
               const songTitle = parseSongValue(song.name || song.title, 'Unknown Song');
               const songArtist = parseSongValue(song.artist, 'Unknown Artist');

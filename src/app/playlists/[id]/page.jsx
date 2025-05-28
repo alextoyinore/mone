@@ -42,7 +42,7 @@ export default function PlaylistDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center min-h-[calc(100vh-5em)]">
         <LoadingSpinner />
       </div>
     );
@@ -50,7 +50,7 @@ export default function PlaylistDetailPage() {
 
   if (!playlist) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-5em)]">
         <h1 className="text-2xl font-bold mb-4">Playlist not found</h1>
         <Link href="/playlists" className="text-blue-500 hover:underline">
           Back to playlists
@@ -60,7 +60,7 @@ export default function PlaylistDetailPage() {
   }
 
   return (
-    <div className="container mx-auto">
+    <div className="min-h-[calc(100vh-5em)] mx-auto">
       {/* Full-width Header Section */}
       <div className="relative mb-12">
         <div className="relative h-[30vh] md:h-[40vh] lg:h-[50vh] w-full overflow-hidden">
@@ -131,3 +131,4 @@ export default function PlaylistDetailPage() {
     </div>
   );
 }
+

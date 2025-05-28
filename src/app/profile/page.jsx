@@ -46,6 +46,7 @@ export default function ProfilePage() {
     fetchToken();
   }, [user]);
 
+
   useEffect(() => {
     const checkArtistStatus = async () => {
       if (!user || !token) return;
@@ -59,6 +60,8 @@ export default function ProfilePage() {
         });
 
         const data = await response.json();
+        console.log(data);
+        
         setIsArtist(data.isArtist);
       } catch (error) {
         console.error('Failed to check artist status', error);
@@ -68,6 +71,7 @@ export default function ProfilePage() {
 
     checkArtistStatus();
   }, [user, token]);
+
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
@@ -90,6 +94,7 @@ export default function ProfilePage() {
     }
   };
 
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -100,6 +105,7 @@ export default function ProfilePage() {
       reader.readAsDataURL(file);
     }
   };
+
 
   const handleBecomeArtist = async () => {
     try {
@@ -128,7 +134,7 @@ export default function ProfilePage() {
 
       const data = await response.json();
       if (data.success) {
-        toast.success('Successfully became an artist!');
+        toast.success(data.message);
         setIsArtist(true);
         Cookies.set('isArtist', 'true', { expires: 7 });
       } else {
@@ -140,56 +146,60 @@ export default function ProfilePage() {
     }
   };
 
+
   if (!user) {
     return <AuthRequired message="You must be logged in to view your profile." />;
   }
 
+
   return (
-    <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">My Profile</h1>
-        
-        <div className="grid md:grid-cols-3 gap-8">
-          {/* Profile Section */}
-          <div className="md:col-span-2 bg-white dark:bg-gray-900 rounded-lg p-8">
-            <div className="flex items-center mb-6">
-              <div className="relative mr-6">
-                <Image 
-                  src={profileImage} 
-                  alt="Profile" 
-                  width={400} 
-                  height={400} 
-                  className="rounded-full w-32 h-32 object-cover"
-                  unoptimized
-                />
-                {isEditing && (
-                  <label 
-                    htmlFor="profileImageUpload" 
-                    className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer"
-                  >
-                    📷
-                    <input 
-                      type="file" 
-                      id="profileImageUpload"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                    />
-                  </label>
-                )}
+    <div className="min-h-screen dark:from-gray-900 dark:to-gray-800">
+      <div className="px-6 py-6">
+        <div className="dark:bg-gray-800">
+          
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center">
+              <div className="relative w-40 h-40 mr-8">
+                <div className="relative w-full h-full rounded-full overflow-hidden">
+                  <Image 
+                    src={profileImage} 
+                    alt="Profile" 
+                    fill 
+                    className="object-cover"
+                    unoptimized
+                  />
+                  {isEditing && (
+                    <label 
+                      htmlFor="profileImageUpload" 
+                      className="absolute bottom-2 right-2 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <input 
+                        type="file" 
+                        id="profileImageUpload"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                    </label>
+                  )}
+                </div>
               </div>
               
               <div>
-                <h2 className="text-2xl font-semibold">
+                <h2 className="text-3xl font-bold">
                   {isEditing ? (
                     <input 
                       type="text" 
                       value={displayName}
                       onChange={(e) => setDisplayName(e.target.value)}
-                      className="w-full px-2 py-1 border rounded bg-white dark:bg-gray-700"
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Display Name"
                     />
                   ) : (
-                    displayName
+                    <span className="font-bold text-gray-900 dark:text-white">{displayName}</span>
                   )}
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400">
@@ -198,13 +208,26 @@ export default function ProfilePage() {
                       type="email" 
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-2 py-1 border rounded bg-white dark:bg-gray-700"
-                      disabled
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Email Address"
                     />
                   ) : (
-                    email
+                    <span className="text-gray-600 dark:text-gray-400">{email}</span>
                   )}
                 </p>
+
+                <div className="flex gap-2 mt-3">
+                  <button onClick={logout} className="text-red-600 dark:text-red-400 cursor-pointer px-5 py-1 rounded-full hover:bg-red-100 transition-colors bg-red-50 dark:bg-red-800 text-sm">Logout</button>
+
+                  <button onClick={handleUpdateProfile} className="text-gray-600 dark:text-gray-400 cursor-pointer px-5 py-1 rounded-full hover:bg-gray-100 transition-colors bg-gray-50 dark:bg-gray-800 text-sm">Update Profile</button>
+
+                  {
+                    !isArtist && (
+                      <button onClick={handleBecomeArtist} className="text-blue-600 dark:text-blue-400 cursor-pointer px-5 py-1 rounded-full hover:bg-blue-100 transition-colors bg-blue-50 dark:bg-blue-800 text-sm">Become Artist</button>
+                    )
+                  }
+                
+                </div>  
               </div>
             </div>
 
@@ -214,10 +237,12 @@ export default function ProfilePage() {
               </div>
             )}
 
+            {/* Artist Stats */}
+
             <div className="mt-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="flex gap-14">
                 <div>
-                  <h3 className="text-lg font-semibold mb-2">Account Stats</h3>
+                  <h3 className="text-lg font-semibold">Account Stats</h3>
                   <ul className="space-y-1 text-gray-600 dark:text-gray-400">
                     <li>Joined: May 2025</li>
                     <li>Favorite Tracks: 24</li>
@@ -226,7 +251,7 @@ export default function ProfilePage() {
                 </div>
                 
                 <div>
-                  <h3 className="text-lg font-semibold mb-2">Preferences</h3>
+                  <h3 className="text-lg font-semibold">Preferences</h3>
                   <div className="space-y-2">
                     <label className="flex items-center">
                       <input 
@@ -245,62 +270,12 @@ export default function ProfilePage() {
                     </label>
                   </div>
                 </div>
-              </div>
-
-              <div className="flex justify-between items-center mt-6">
-                {isEditing ? (
-                  <button
-                    type="submit"
-                    onClick={handleUpdateProfile}
-                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                  >
-                    Save Changes
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                  >
-                    Edit Profile
-                  </button>
-                )}
-                
-                <button
-                  onClick={logout}
-                  className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-                >
-                  Logout
-                </button>
-              </div>
+              </div> 
             </div>
-          </div>
-
-          {/* Artist Section */}
-          <div className="bg-white dark:bg-gray-900 rounded-lg p-8">
-            <h3 className="text-2xl font-semibold mb-4">Artist Profile</h3>
-            {isArtist ? (
-              <div className="text-green-600 dark:text-green-400">
-                <p>🎵 You are an artist</p>
-                <Link href="/upload" className="mt-4 inline-block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-                  Upload Song
-                </Link>
-              </div>
-            ) : (
-              <div>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  Want to share your music with the world?
-                </p>
-                <button 
-                  onClick={handleBecomeArtist}
-                  className="w-full bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
-                >
-                  Become an Artist
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>
     </div>
   );
 }
+

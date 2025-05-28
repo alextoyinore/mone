@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import Navbar from './Navbar';
+import Navbar from './SideNav';
 import RightSidebar from './RightSidebar';
 import MiniPlayer from './MiniPlayer';
 

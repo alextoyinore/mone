@@ -8,10 +8,20 @@ const router = express.Router();
 // Get all playlists for a user
 router.get('/', async (req, res) => {
   try {
-    const { user } = req.query;
+    const { user } = req.body;
     if (!user) return res.status(400).json({ error: 'User required' });
     // Find playlists owned by user or where user is a collaborator
     const playlists = await Playlist.find({ $or: [ { user }, { collaborators: user } ] }).populate('songs');
+    res.json(playlists);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Get all public playlists
+router.get('/public', async (req, res) => {
+  try {
+    const playlists = await Playlist.find({ isPublic: true }).populate('songs');
     res.json(playlists);
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -387,12 +387,12 @@ router.get('/artist-status', verifyFirebaseToken, async (req, res) => {
 
 // Become an artist
 router.post('/become-artist', verifyFirebaseToken, async (req, res) => {
-  console.log('Become Artist Request Details:', {
-    method: req.method,
-    path: req.path,
-    headers: req.headers,
-    user: req.user ? { email: req.user.email, uid: req.user.uid } : 'No user'
-  });
+  // console.log('Become Artist Request Details:', {
+  //   method: req.method,
+  //   path: req.path,
+  //   headers: req.headers,
+  //   user: req.user ? { email: req.user.email, uid: req.user.uid } : 'No user'
+  // });
 
   try {
     const user = await User.findOne({ email: req.user.email }).catch(err => {
@@ -405,7 +405,7 @@ router.post('/become-artist', verifyFirebaseToken, async (req, res) => {
     });
     
     if (user.artist) {
-      console.log('User is already an artist:', req.user.email);
+      // console.log('User is already an artist:', req.user.email);
       return res.status(400).json({ 
         success: false, 
         message: 'You are already an artist' 

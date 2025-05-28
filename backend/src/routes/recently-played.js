@@ -1,52 +1,111 @@
 const express = require('express');
 const Song = require('../models/Song');
+const User = require('../models/User');
 const router = express.Router();
+const verifyFirebaseToken  = require('../middleware/verifyFirebaseToken');
 
-// Add user to recentlyPlayed for a song (with timestamp)
-router.post('/', async (req, res) => {
-  const { user, song } = req.body;
-  if (!user || !song) return res.status(400).json({ error: 'User and song required' });
-  await Song.updateOne(
-    { _id: song },
-    { $push: { recentlyPlayed: { user, playedAt: new Date() } } }
-  );
-  res.json({ success: true });
+
+// Add song to user's recently played list (with timestamp)
+router.post('/', verifyFirebaseToken, async (req, res) => {
+  const { song } = req.body;
+  if (!song) return res.status(400).json({ error: 'Song required' });
+
+  try {
+    // Get user
+    const user = await User.findById(req.user.uid);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Check if song is already in recently played
+    const existingEntry = user.recentlyPlayed.find(rp => rp.song.toString() === song);
+    if (existingEntry) {
+      // Update existing entry's timestamp
+      existingEntry.playedAt = new Date();
+    } else {
+      // Add new entry if not already present
+      if (user.recentlyPlayed.length >= 100) {
+        return res.status(400).json({ error: 'Recently played list is full. Please remove some songs to add more.' });
+      }
+      user.recentlyPlayed.push({ song, playedAt: new Date() });
+    }
+
+    await user.save();
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error updating recently played:', error);
+    res.status(500).json({ error: 'Failed to update recently played' });
+  }
 });
 
-// Get recently played songs for a user (most recent first, up to 20)
-router.get('/:user', async (req, res) => {
-  const user = req.params.user;
-  if (!user) return res.status(400).json({ error: 'User required' });
-  // Find all songs where recentlyPlayed contains this user
-  const songs = await Song.find({ 'recentlyPlayed.user': user });
-  // Map each song to the most recent playedAt for this user
-  const withPlayedAt = songs.map(song => {
-    const entry = song.recentlyPlayed.filter(rp => rp.user === user).sort((a, b) => new Date(b.playedAt) - new Date(a.playedAt))[0];
-    return { ...song.toObject(), playedAt: entry ? entry.playedAt : null };
-  });
-  // Sort by playedAt desc, then limit
-  withPlayedAt.sort((a, b) => new Date(b.playedAt) - new Date(a.playedAt));
-  res.json(withPlayedAt.slice(0, 20));
+// Get user's recently played songs (most recent first, up to 20)
+router.get('/', verifyFirebaseToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.uid);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Get the song IDs from recently played entries
+    const songIds = user.recentlyPlayed.map(rp => rp.song);
+    
+    // Fetch all songs in one query
+    const songs = await Song.find({ _id: { $in: songIds } });
+    
+    // Create mapping of song IDs to songs
+    const songsMap = songs.reduce((acc, song) => {
+      acc[song._id.toString()] = song;
+      return acc;
+    }, {});
+
+    // Map recently played entries to include song data
+    const withPlayedAt = user.recentlyPlayed
+      .map(rp => {
+        const song = songsMap[rp.song.toString()];
+        return song ? { ...song.toObject(), playedAt: rp.playedAt } : null;
+      })
+      .filter(Boolean) // Remove null entries
+      .sort((a, b) => new Date(b.playedAt) - new Date(a.playedAt));
+
+    res.json(withPlayedAt.slice(0, 20));
+  } catch (error) {
+    console.error('Error fetching recently played:', error);
+    res.status(500).json({ error: 'Failed to fetch recently played songs' });
+  }
 });
 
 // Remove a song from user's recently played
-router.delete('/:user/:songId', async (req, res) => {
-  const { user, songId } = req.params;
-  await Song.updateOne(
-    { _id: songId },
-    { $pull: { recentlyPlayed: { user } } }
-  );
-  res.json({ success: true });
+router.delete('/:songId', verifyFirebaseToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.uid);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    user.recentlyPlayed = user.recentlyPlayed.filter(rp => rp.song.toString() !== req.params.songId);
+    await user.save();
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error removing from recently played:', error);
+    res.status(500).json({ error: 'Failed to remove from recently played' });
+  }
 });
 
-// Clear all recently played for a user
-router.delete('/clear/:user', async (req, res) => {
-  const user = req.params.user;
-  await Song.updateMany(
-    { 'recentlyPlayed.user': user },
-    { $pull: { recentlyPlayed: { user } } }
-  );
-  res.json({ success: true });
+// Clear user's recently played list
+router.delete('/clear', verifyFirebaseToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.uid);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    user.recentlyPlayed = [];
+    await user.save();
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error clearing recently played:', error);
+    res.status(500).json({ error: 'Failed to clear recently played' });
+  }
 });
 
 module.exports = router;

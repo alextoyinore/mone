@@ -24,8 +24,9 @@ import ProfileIcon from './icons/ProfileIcon';
 import AlbumIcon from './icons/AlbumIcon';
 import ThemeIcon from './icons/ThemeIcon';
 import { usePathname } from 'next/navigation';
+import { useAudioPlayer } from '../contexts/AudioPlayerContext';
 
-export default function Navbar() {
+export default function SideNav() {
   const [search, setSearch] = useState('');
   const [isExpanded, setIsExpanded] = useState(true);
   const router = useRouter();
@@ -33,6 +34,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const [notifOpen, setNotifOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
+  const { isPlaying, currentSong } = useAudioPlayer();
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -45,7 +47,7 @@ export default function Navbar() {
     // { name: 'Notifications', icon: NotificationIcon, onClick: () => setNotifOpen((o) => !o) },
     // { name: 'Theme', icon: ThemeIcon, onClick: () => setThemeOpen((o) => !o) },
     // { name: 'Artists', icon: ArtistIcon, path: '/artists' },
-    // { name: 'Albums', icon: AlbumIcon, path: '/albums' },
+    { name: 'Albums', icon: AlbumIcon, path: '/albums' },
     { name: 'Songs', icon: SongIcon, path: '/songs' },
     { name: 'Upload', icon: UploadIcon, path: '/upload' },
     { name: 'Favorites', icon: FavoriteIcon, path: '/favorites' },
@@ -54,9 +56,12 @@ export default function Navbar() {
     { name: 'Inbox', icon: MessageIcon, path: '/inbox' },
   ];
 
+
+  if (pathname == '/auth/login' || pathname == '/auth/signup') return null;
+
   return (
     <>
-      <nav className={`sticky relative top-0 left-0 overflow-y-auto p-5 ${isExpanded ? 'w-80' : 'w-20'} bg-gray-100 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 h-screen transition-all duration-300 ease-in-out z-40`}>
+      <nav className={`sticky relative left-0 overflow-y-auto p-5 ${isExpanded ? 'w-60' : 'w-20'} bg-gray-100 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 ${ currentSong ? 'top-[5em] max-h-[calc(100vh-5em)]' : 'top-0 max-h-screen' } transition-all duration-300 ease-in-out z-40`}>
         {/* Logo */}
         <Link href="/">
           <div className='flex items-center cursor-pointer gap-1 mb-6 ml-2'>
@@ -149,12 +154,12 @@ export default function Navbar() {
                 />
               ) : (
                 <div className='w-10 h-10 cursor-pointer font-bold text-gray-500 dark:text-gray-400 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center'>
-                  {user.displayName ? user.displayName[0].toUpperCase() : user.email.split('@')[0][0].toUpperCase()}
+                  {user?.displayName ? user?.displayName[0].toUpperCase() : user?.email.split('@')[0][0].toUpperCase()}
                 </div>
               )}
               <div className='flex flex-col items-start gap-1'>
                 <Link href='/profile' className='font-medium text-gray-800 dark:text-white cursor-pointer hover:text-gray-600 dark:hover:text-gray-400'>
-                  {user.displayName.split(' ')[0] || user.email.split('@')[0]}
+                  {user?.displayName.split(' ')[0] || user?.email.split('@')[0]}
                 </Link>
                 <button 
                   onClick={logout} 
@@ -192,7 +197,7 @@ export default function Navbar() {
                 />
               ) : (
                 <div className='w-10 h-10 cursor-pointer font-bold text-gray-500 dark:text-gray-400 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center'>
-                  {user.displayName ? user.displayName[0].toUpperCase() : user.email.split('@')[0][0].toUpperCase()}
+                  {user?.displayName ? user?.displayName[0].toUpperCase() : user?.email.split('@')[0][0].toUpperCase()}
                 </div>
               )}
             </div>

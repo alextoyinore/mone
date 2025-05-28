@@ -1,11 +1,9 @@
 const Song = require('../models/Song');
-
+const Album = require('../models/Album');
 const cloudinary = require('../config/cloudinary');
-
 const User = require('../models/User');
 const Artist = require('../models/Artist');
 const Activity = require('../models/Activity');
-
 const auth = require('../middleware/verifyFirebaseToken');
 
 exports.createSong = async (req, res) => {
@@ -89,11 +87,21 @@ exports.createSong = async (req, res) => {
       try { links = JSON.parse(links); } catch { links = {}; }
     }
 
+    let albumId;
+    if (album) {
+      const albumExists = await Album.findOne({ title: album, artist: artistId });
+      if (albumExists) {
+        albumId = albumExists._id;
+      } else {
+        const newAlbum = await Album.create({ title: album, artist: artistId });
+        albumId = newAlbum._id;
+      }
+    }
 
     const song = await Song.create({
       title,
       artist: artistId,
-      album,
+      album: albumId,
       genre,
       description,
       lyrics,

@@ -18,10 +18,10 @@ export default function GridSongItem({
     >
       <div className="aspect-square relative overflow-hidden rounded-xl">
         <Image 
-          src={songCoverArt} 
+          src={songCoverArt}
           alt={songTitle} 
-          width={300} 
-          height={300} 
+          width={120} 
+          height={120} 
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           onClick={() => playSong(song)}
         />
