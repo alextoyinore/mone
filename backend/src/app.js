@@ -21,6 +21,7 @@ app.use('/api/upload', require('./routes/upload'));
 app.use('/api/playlists', require('./routes/playlist'));
 app.use('/api/comments', require('./routes/comment'));
 app.use('/api/users', require('./routes/user'));
+app.use('/api/favorite', require('./routes/favorite'));
 app.use('/api/albums', require('./routes/album'));
 app.use('/api/follow', require('./routes/follow'));
 app.use('/api/analytics', require('./routes/analytics'));

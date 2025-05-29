@@ -1,126 +1,114 @@
 "use client";
 
-import { useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
-import AuthRequired from '../../components/AuthRequired';
+import GridSongItem from '@/components/GridSongItem';
+import ListSongItem from '@/components/ListSongItem';
+import GridIcon from '@/components/icons/GridIcon';
+import ListIcon from '@/components/icons/ListIcon';
+import { useAudioPlayer } from '@/contexts/AudioPlayerContext';
+import AuthRequired from '@/components/AuthRequired';
 
-const SAMPLE_FAVORITES = [
-  { 
-    id: '1', 
-    title: 'Midnight Memories', 
-    artist: 'Lunar Waves', 
-    album: 'Starry Nights',
-    duration: '3:45',
-    coverImage: 'https://placehold.co/',
-    genre: 'Electronic'
-  },
-  { 
-    id: '2', 
-    title: 'Acoustic Sunrise', 
-    artist: 'Forest Echoes', 
-    album: 'Wooden Strings',
-    duration: '4:12',
-    coverImage: 'https://placehold.co/',
-    genre: 'Acoustic'
-  },
-  { 
-    id: '3', 
-    title: 'Urban Rhythm', 
-    artist: 'City Beats', 
-    album: 'Street Sounds',
-    duration: '3:30',
-    coverImage: 'https://placehold.co/',
-    genre: 'Hip Hop'
-  }
-];
 
 export default function FavoritesPage() {
   const { user } = useAuth();
-  const [favorites, setFavorites] = useState(SAMPLE_FAVORITES);
-  const [filter, setFilter] = useState('');
+  const { playSong, setSongsForPlayback } = useAudioPlayer();
+  const [favorites, setFavorites] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isGridView, setIsGridView] = useState(true);
 
-  const filteredFavorites = favorites.filter(song => 
-    song.title.toLowerCase().includes(filter.toLowerCase()) ||
-    song.artist.toLowerCase().includes(filter.toLowerCase())
-  );
+  useEffect(() => {
+    if (!user?.email) return;
 
-  const handleRemoveFavorite = (songId) => {
-    setFavorites(favorites.filter(song => song.id !== songId));
+    const fetchFavorites = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/favorite?user=${user.email}`);
+        const data = await response.json();
+        console.log('Favorites data:', data); 
+        setFavorites(data);
+      } catch (error) {
+        console.error('Error fetching favorites:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFavorites();
+  }, [user?.email]);
+
+  const handlePlayAll = () => {
+    if (!favorites?.length) return;
+    setSongsForPlayback(favorites.map(f => f.song));
+    playSong(favorites.map(f => f.song)[0]);
   };
 
   if (!user) {
-    return <AuthRequired message="You must be logged in to view your favorite tracks." />;
+    return <AuthRequired />;
   }
 
   return (
-    <div className="min-h-screen p-8 bg-white dark:bg-black text-gray-900 dark:text-white">
-      <h1 className="text-3xl font-bold mb-6">My Favorite Tracks</h1>
-      
-      <div className="mb-6 flex space-x-4">
-        <input 
-          type="text" 
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          placeholder="Filter favorites..."
-          className="flex-grow px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-900 dark:text-white"
-        />
+    <div className="container mx-auto px-4 py-8 min-h-screen">
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex gap-4 items-center">
+          <h1 className="text-3xl font-bold">Favorites</h1>
+          <p className="text-gray-600 text-sm">{favorites.length} favorites</p>
+          <span className="text-blue-500 cursor-pointer text-sm hover:text-blue-800"
+          onClick={() => handlePlayAll()}
+          >Play All</span>
+        </div>
+
+        <button
+          onClick={() => setIsGridView(!isGridView)}
+          className="text-gray-600 hover:text-gray-800"
+          title="Toggle view"
+        >
+          {isGridView ? (
+            <ListIcon className="w-6 h-6" />
+          ) : (
+            <GridIcon className="w-6 h-6" />
+          )}
+        </button>
       </div>
 
-      {filteredFavorites.length === 0 ? (
-        <div className="text-center text-gray-500 dark:text-gray-400">
-          <p>No favorite tracks found.</p>
-          <Link 
-            href="/explore" 
-            className="text-blue-600 dark:text-blue-400 hover:underline mt-4 inline-block"
-          >
-            Explore New Music
-          </Link>
+      {isLoading ? (
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        </div>
+      ) : favorites.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-gray-600">No favorites yet</p>
         </div>
       ) : (
         <div className="space-y-4">
-          {filteredFavorites.map((song) => (
-            <div 
-              key={song.id} 
-              className="flex items-center bg-gray-100 dark:bg-gray-900 p-4 rounded-lg shadow-md hover:shadow-lg transition"
-            >
-              <Image 
-                src={song.coverImage} 
-                alt={song.title} 
-                width={64} 
-                height={64} 
-                className="w-16 h-16 object-cover rounded-md mr-4" 
-                unoptimized
-              />
-              
-              <div className="flex-grow">
-                <h2 className="text-lg font-semibold">{song.title}</h2>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {song.artist} • {song.album} • {song.genre}
-                </p>
-              </div>
-              
-              <div className="flex items-center space-x-4">
-                <span className="text-gray-500 dark:text-gray-400">{song.duration}</span>
-                
-                <button 
-                  onClick={() => handleRemoveFavorite(song.id)}
-                  className="text-red-500 hover:text-red-700 transition"
-                  title="Remove from Favorites"
-                >
-                  ❌
-                </button>
-                
-                <button 
-                  className="bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition"
-                  title="Play"
-                >
-                  ▶️
-                </button>
-              </div>
+          {isGridView ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {favorites.map((favorite) => (
+                <GridSongItem
+                  key={favorite.song._id}
+                  song={favorite.song}
+                  songTitle={favorite.song.title}
+                  songArtist={favorite.song.artist}
+                  songCoverArt={favorite.song.coverArt}
+                  playSong={() => playSong(favorite.song)}
+                />
+              ))}
             </div>
-          ))}
+          ) : (
+            <div className="space-y-4">
+              {favorites.map((favorite) => (
+                <ListSongItem
+                  key={favorite.song._id}
+                  song={favorite.song}
+                  songTitle={favorite.song.title}
+                  songArtist={favorite.song.artist}
+                  songCoverArt={favorite.song.coverArt}
+                  playSong={() => playSong(favorite.song)}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

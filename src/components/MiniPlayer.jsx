@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { useAudioPlayer } from '../contexts/AudioPlayerContext';
-import { parseSongValue, formatTime } from '@/utils/songUtils';
+import { parseSongValue } from '@/utils/songUtils';
 import PlayIcon from '@/components/icons/PlayIcon';
 import PauseIcon from '@/components/icons/PauseIcon';
 import NextIcon from '@/components/icons/NextIcon';
@@ -16,13 +16,44 @@ import AddToPlaylistIcon from '@/components/icons/AddToPlaylistIcon';
 import NowPlaying from '@/components/NowPlaying';
 import { Toaster, toast  } from 'react-hot-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import ShareModal from '@/components/ShareModal';
 
 export default function MiniPlayer() {
   const { user } = useAuth();
   const [isNowPlayingModalOpen, setIsNowPlayingModalOpen] = useState(false);
   const { currentSong, isPlaying, progress, togglePlayPause, seekTo, playPreviousSong, playNextSong, loopMode, toggleLoopMode, isShuffling, toggleShuffleMode } = useAudioPlayer();
 
+  const toggleFavorite = async (e) => {
+    e.stopPropagation();
+    if (!user?.email) {
+      toast.error(
+        "Please sign in",
+        "You need to be signed in to like songs",
+        "destructive"
+      );
+      return;
+    }
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/favorite/${currentSong?._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user: user.email })
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update favorite status');
+      }
+      
+      toast.success(data.liked ? "Added to favorites" : "Removed from favorites");
+    } catch (error) {
+      toast.error(error.response?.data?.error || "Failed to update favorite status");
+    }
+  };
+
   const [isAddToPlaylistModalOpen, setIsAddToPlaylistModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [playlists, setPlaylists] = useState([]);
   const [loadingPlaylists, setLoadingPlaylists] = useState(false);
   const [error, setError] = useState(null);
@@ -203,14 +234,26 @@ export default function MiniPlayer() {
 
           {/* Action Buttons - Right */}
           <div className="flex items-center hidden md:block justify-end space-x-4 w-1/4 text-right">
-            <button className="text-gray-600 hover:text-blue-600 transition-colors">
+            <button 
+              className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleFavorite(e);
+              }}
+            >
               <FavoriteIcon className="w-5 h-5" />
             </button>
-            <button className="text-gray-600 hover:text-blue-600 transition-colors">
+            <button 
+              className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsShareModalOpen(true);
+              }}
+            >
               <ShareIcon className="w-5 h-5" />
             </button>
             <button 
-              className="text-gray-600 hover:text-blue-600 transition-colors"
+              className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
               onClick={async (e) => {
                 e.stopPropagation();
                 setIsAddToPlaylistModalOpen(true);
@@ -221,6 +264,14 @@ export default function MiniPlayer() {
             </button>
           </div>
         </div>
+
+        {/* Share Modal */}
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          url={window.location.href}
+          title={currentSong?.title}
+        />
 
         {/* Progress bar */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200">

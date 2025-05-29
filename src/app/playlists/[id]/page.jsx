@@ -98,7 +98,7 @@ export default function PlaylistDetailPage() {
             <div className="flex items-center gap-4">
               <button
                 onClick={handlePlayAll}
-                className="bg-blue-500 text-white text-sm px-6 py-2 rounded-full hover:bg-blue-600 transition flex items-center gap-2 cursor-pointer"
+                className="bg-green-400 text-white text-sm px-4 py-2 rounded-full hover:bg-green-600 transition flex items-center gap-2 cursor-pointer"
               >
                 <PlayIcon className="w-5 h-5" />
                 Play All
