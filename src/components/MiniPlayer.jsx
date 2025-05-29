@@ -30,12 +30,11 @@ export default function MiniPlayer() {
   const fetchPlaylists = async () => {
     try {
       setLoadingPlaylists(true);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/playlists`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/playlists?user=${user.email}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ user: user._id }),
+        }
       });
       if (!response.ok) throw new Error('Failed to fetch playlists');
       const data = await response.json();
@@ -48,18 +47,18 @@ export default function MiniPlayer() {
     }
   };
 
-  useEffect(() => {
-    fetchPlaylists();
-  }, []);
+  // useEffect(() => {
+  //   fetchPlaylists();
+  // }, []);
 
   const addToPlaylist = async (playlistId) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/playlists/${playlistId}/songs`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/playlists/${playlistId}/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ songId: currentSong._id, user: user._id }),
+        body: JSON.stringify({ songId: currentSong._id, user: user.email }),
       });
       if (!response.ok) throw new Error('Failed to add song to playlist');
       toast.success('Song added to playlist', {
@@ -82,12 +81,12 @@ export default function MiniPlayer() {
   const songCoverArt = parseSongValue(currentSong.coverArt, 'https://placehold.co/64x64');
 
   return (
-    <div className="relative sticky top-0 left-0 z-50">
+    <div className="relative sticky bottom-0 left-0 z-50">
       <Toaster />
       {/* Add to Playlist Modal */}
       {isAddToPlaylistModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg w-96">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-lg w-96">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold">Add to Playlist</h2>
               <button 
@@ -114,7 +113,7 @@ export default function MiniPlayer() {
                   <button
                     key={playlist._id}
                     onClick={() => addToPlaylist(playlist._id)}
-                    className="w-full flex items-center justify-between px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    className="w-full flex items-center justify-between px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
                   >
                     <div>
                       <h3 className="font-medium">{playlist.name}</h3>
@@ -132,8 +131,8 @@ export default function MiniPlayer() {
       )}
 
       
-      <div className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-md px-4 py-3 z-50 border-t border-gray-200 dark:border-gray-800 transition-all duration-700 cursor-pointer hover:bg-white/80 dark:hover:bg-gray-900/80" onClick={() => setIsNowPlayingModalOpen(true)}>
-        <div className="flex items-center justify-between w-full">
+      <div className="bg-white/70 dark:bg-black/70 backdrop-blur-md px-4 py-3 z-50 border-t border-gray-200 dark:border-gray-800 transition-all duration-700 cursor-pointer hover:bg-white/80 dark:hover:bg-black/80" onClick={() => setIsNowPlayingModalOpen(true)}>
+        <div className="flex items-center justify-between w-full rounded-xl">
           <Image 
             src={songCoverArt} 
             alt={`Cover art for ${songTitle}`}
@@ -148,14 +147,14 @@ export default function MiniPlayer() {
           </div>
 
           {/* Transport Controls - Centered */}
-          <div className="flex items-center justify-center space-x-4 w-2/4">
+          <div className="flex items-center justify-end md:justify-center space-x-4 w-2/4">
             <ShuffleIcon 
               onClick={(e) => {
                 e.stopPropagation();
                 toggleShuffleMode();
               }} 
               isActive={isShuffling}
-              className="w-5 h-5 text-gray-600 hover:text-blue-600 dark:hover:text-white cursor-pointer"
+              className="w-5 h-5 hidden md:block text-gray-600 hover:text-blue-600 dark:hover:text-white cursor-pointer"
             />
 
             <button 
@@ -198,12 +197,12 @@ export default function MiniPlayer() {
                 toggleLoopMode();
               }} 
               isActive={loopMode !== 0}
-              className="w-5 h-5 text-gray-600 hover:text-blue-600 dark:hover:text-white cursor-pointer"
+              className="w-5 h-5 text-gray-600 hidden md:block hover:text-blue-600 dark:hover:text-white cursor-pointer"
             />
           </div>
 
           {/* Action Buttons - Right */}
-          <div className="flex items-center justify-end space-x-4 w-1/4">
+          <div className="flex items-center hidden md:block justify-end space-x-4 w-1/4 text-right">
             <button className="text-gray-600 hover:text-blue-600 transition-colors">
               <FavoriteIcon className="w-5 h-5" />
             </button>
@@ -212,10 +211,10 @@ export default function MiniPlayer() {
             </button>
             <button 
               className="text-gray-600 hover:text-blue-600 transition-colors"
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.stopPropagation();
                 setIsAddToPlaylistModalOpen(true);
-                !playlists.length && fetchPlaylists();
+               !playlists.length && await fetchPlaylists();
               }}
             >
               <AddToPlaylistIcon className="w-5 h-5" />
@@ -224,7 +223,7 @@ export default function MiniPlayer() {
         </div>
 
         {/* Progress bar */}
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200">
           <div 
             className="h-full bg-blue-500" 
             style={{ width: `${progress}%` }}

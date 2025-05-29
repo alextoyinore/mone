@@ -274,7 +274,7 @@ export default function SongDetailPage() {
         </div>
 
         {/* Artist Section */}
-        <div className="mt-12 bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+        <div className="mt-12 bg-gray-50 dark:bg-gray-900 rounded-lg p-6">
           <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">About the Artist</h2>
           <div className="flex items-start gap-6">
             <div className="w-32 h-32 relative rounded-full overflow-hidden flex-shrink-0">

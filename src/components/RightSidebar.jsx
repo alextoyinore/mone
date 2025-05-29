@@ -3,7 +3,7 @@ import Footer from './Footer';
 
 export default function RightSidebar() {
   return (
-    <aside className="sticky top-0 right-0 h-screen overflow-y-auto w-80 bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-800 p-6 hidden md:block">
+    <aside className="sticky top-0 right-0 h-screen overflow-y-auto w-80 bg-white dark:bg-black border-l border-gray-200 dark:border-gray-800 p-6 hidden md:block">
       <div className="space-y-6">
         {/* Trending Section */}
         <section>

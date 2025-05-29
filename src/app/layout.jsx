@@ -32,19 +32,19 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
-      <body className={`${dmSans.className} w-full flex justify-center items-center bg-white dark:bg-gray-900 text-gray-900 dark:text-white`}>
+      <body className={`${dmSans.className} w-full flex justify-center items-center bg-white dark:bg-black text-gray-900 dark:text-white`}>
         <AuthProvider>
           <ThemeProvider>
             <AudioPlayerProvider>
               <SongOptionsProvider>
-                <main className="flex flex-col min-w-[80%] max-w-[100%] mx-auto min-h-screen relative">
-                  <MiniPlayer className="sticky top-0 left-0 z-50" />
+                <main className="flex flex-col sm:max-w-full sm:min-w-full lg:max-w-[80%] lg:min-w-[80%] mx-auto min-h-screen relative">
                   <section className="flex w-full relative">
                     <SideNav />
                     <div className="flex-grow relative overflow-y-auto transition-all duration-300">
                       {children}
                     </div>
                   </section>
+                  <MiniPlayer className="sticky bottom-0 left-0 z-50" />
                 </main>
               </SongOptionsProvider>
             </AudioPlayerProvider>

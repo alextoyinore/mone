@@ -68,7 +68,7 @@ export default function NotificationsPage() {
   }
 
   return (
-    <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+    <div className="min-h-screen p-8 bg-white dark:bg-black text-gray-900 dark:text-white">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Notifications</h1>
         
@@ -78,7 +78,7 @@ export default function NotificationsPage() {
             className={`px-4 py-2 rounded-lg transition ${
               filter === 'all' 
                 ? 'bg-blue-600 text-white' 
-                : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                : 'bg-gray-200 dark:bg-gray-900 text-gray-700 dark:text-gray-300'
             }`}
           >
             All
@@ -88,7 +88,7 @@ export default function NotificationsPage() {
             className={`px-4 py-2 rounded-lg transition ${
               filter === 'unread' 
                 ? 'bg-blue-600 text-white' 
-                : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                : 'bg-gray-200 dark:bg-gray-900 text-gray-700 dark:text-gray-300'
             }`}
           >
             Unread
@@ -98,7 +98,7 @@ export default function NotificationsPage() {
             className={`px-4 py-2 rounded-lg transition ${
               filter === 'read' 
                 ? 'bg-blue-600 text-white' 
-                : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                : 'bg-gray-200 dark:bg-gray-900 text-gray-700 dark:text-gray-300'
             }`}
           >
             Read
@@ -117,7 +117,7 @@ export default function NotificationsPage() {
               key={notification.id} 
               className={`flex items-center p-4 rounded-lg shadow-md transition ${
                 notification.read 
-                  ? 'bg-gray-100 dark:bg-gray-800' 
+                  ? 'bg-gray-100 dark:bg-gray-900' 
                   : 'bg-blue-50 dark:bg-blue-900 border-l-4 border-blue-600'
               }`}
             >

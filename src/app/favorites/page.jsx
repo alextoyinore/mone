@@ -55,7 +55,7 @@ export default function FavoritesPage() {
   }
 
   return (
-    <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+    <div className="min-h-screen p-8 bg-white dark:bg-black text-gray-900 dark:text-white">
       <h1 className="text-3xl font-bold mb-6">My Favorite Tracks</h1>
       
       <div className="mb-6 flex space-x-4">
@@ -64,7 +64,7 @@ export default function FavoritesPage() {
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
           placeholder="Filter favorites..."
-          className="flex-grow px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-800 dark:text-white"
+          className="flex-grow px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-900 dark:text-white"
         />
       </div>
 
@@ -83,7 +83,7 @@ export default function FavoritesPage() {
           {filteredFavorites.map((song) => (
             <div 
               key={song.id} 
-              className="flex items-center bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition"
+              className="flex items-center bg-gray-100 dark:bg-gray-900 p-4 rounded-lg shadow-md hover:shadow-lg transition"
             >
               <Image 
                 src={song.coverImage} 

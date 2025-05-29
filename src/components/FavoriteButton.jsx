@@ -35,7 +35,7 @@ export default function FavoriteButton({ songId, initialLiked = false, onChange 
       disabled={loading}
       aria-label={liked ? "Unlike song" : "Like song"}
       className={
-        "w-10 h-10 flex items-center justify-center rounded-full shadow-md bg-white/80 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 text-2xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 " +
+        "w-10 h-10 flex items-center justify-center rounded-full shadow-md bg-white/80 dark:bg-gray-900/80 border border-gray-200 dark:border-gray-700 text-2xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 " +
         (liked ? "text-red-500 scale-110" : "text-gray-400 hover:text-red-400 hover:scale-110")
       }
       title={liked ? "Unlike" : "Like"}

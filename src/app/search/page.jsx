@@ -64,7 +64,7 @@ export default function SearchPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black text-gray-900 dark:text-white">
         <div className="text-center">
           <p className="text-xl mb-4">Please log in to access search</p>
           <Link 
@@ -79,7 +79,7 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+    <div className="min-h-screen p-8 bg-white dark:bg-black text-gray-900 dark:text-white">
       <h1 className="text-3xl font-bold mb-6">Search</h1>
       
       <form onSubmit={handleSearch} className="mb-6">
@@ -89,7 +89,7 @@ export default function SearchPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search songs, artists, albums..."
-            className="w-full px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-800 dark:text-white"
+            className="w-full px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-900 dark:text-white"
           />
           <button 
             type="submit" 
@@ -115,7 +115,7 @@ export default function SearchPage() {
             className={`px-4 py-2 rounded-lg transition capitalize ${
               activeTab === tab 
                 ? 'bg-blue-600 text-white' 
-                : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                : 'bg-gray-200 dark:bg-gray-900 text-gray-700 dark:text-gray-300'
             }`}
           >
             {tab}
@@ -140,7 +140,7 @@ export default function SearchPage() {
           {activeTab === 'tracks' && searchResults.tracks.map((track) => (
             <div 
               key={track.id} 
-              className="flex items-center bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition"
+              className="flex items-center bg-gray-100 dark:bg-gray-900 p-4 rounded-lg shadow-md hover:shadow-lg transition"
             >
               <Image 
                 src={track.coverImage || 'https://via.placeholder.com/64'} 
@@ -164,7 +164,7 @@ export default function SearchPage() {
           {activeTab === 'artists' && searchResults.artists.map((artist) => (
             <div 
               key={artist.id} 
-              className="bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
+              className="bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
             >
               <div className="relative h-48 w-full">
                 <Image 
@@ -189,7 +189,7 @@ export default function SearchPage() {
           {activeTab === 'albums' && searchResults.albums.map((album) => (
             <div 
               key={album.id} 
-              className="bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
+              className="bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
             >
               <div className="relative h-48 w-full">
                 <Image 
@@ -214,7 +214,7 @@ export default function SearchPage() {
           {activeTab === 'playlists' && searchResults.playlists.map((playlist) => (
             <div 
               key={playlist.id} 
-              className="bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
+              className="bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
             >
               <div className="relative h-48 w-full">
                 <Image 

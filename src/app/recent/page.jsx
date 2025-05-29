@@ -134,7 +134,7 @@ export default function RecentlyPlayedPage() {
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-              className="p-2 rounded-full cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-gray-600 transition-colors"
+              className="p-2 rounded-full cursor-pointer bg-gray-200 dark:bg-gray-900 hover:bg-blue-100 dark:hover:bg-gray-600 transition-colors"
             >
               {viewMode === 'grid' ? (
                 <ListIcon isActive={false} />
@@ -156,7 +156,7 @@ export default function RecentlyPlayedPage() {
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-            className="p-2 rounded-full cursor-pointer bg-gray-200 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-gray-600 transition-colors"
+            className="p-2 rounded-full cursor-pointer bg-gray-200 dark:bg-gray-900 hover:bg-blue-100 dark:hover:bg-gray-600 transition-colors"
           >
             {viewMode === 'grid' ? (
               <ListIcon isActive={false} />
@@ -214,7 +214,7 @@ export default function RecentlyPlayedPage() {
       ) : (
         <div className="space-y-4">
           {recentlyPlayed.map((song) => (
-            <div key={song._id} className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow">
+            <div key={song._id} className="bg-white dark:bg-gray-900 rounded-lg p-4 shadow">
               <div className="flex items-center space-x-4">
                 <Image 
                   src={song.coverArt} 

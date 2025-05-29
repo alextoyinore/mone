@@ -40,12 +40,12 @@ export default function CommentsSection({ songId }) {
   };
 
   return (
-    <div className="mt-8 bg-white/80 dark:bg-gray-900/80 rounded-xl shadow-lg p-6">
+    <div className="mt-8 bg-white/80 dark:bg-black/80 rounded-xl shadow-lg p-6">
       <h3 className="text-xl font-bold mb-4 text-blue-700 dark:text-blue-400">Comments</h3>
       {user && (
         <form onSubmit={postComment} className="flex gap-2 mb-6">
           <input
-            className="border border-gray-300 dark:border-gray-700 p-3 rounded-lg flex-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 transition"
+            className="border border-gray-300 dark:border-gray-700 p-3 rounded-lg flex-1 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 transition"
             placeholder="Add a comment..."
             value={text}
             onChange={e => setText(e.target.value)}

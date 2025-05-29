@@ -36,7 +36,7 @@ export default function FollowButton({ artistId, initialFollowing = false, onCha
       className={
         "px-6 py-2 rounded-full font-semibold shadow-md text-base transition-all duration-200 outline-none focus:ring-2 focus:ring-blue-400 " +
         (following
-          ? "bg-gray-400 dark:bg-gray-700 text-white hover:bg-gray-500 dark:hover:bg-gray-600"
+          ? "bg-gray-400 dark:bg-gray-900 text-white hover:bg-gray-500 dark:hover:bg-gray-600"
           : "bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-600 scale-105")
       }
     >

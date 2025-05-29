@@ -6,14 +6,21 @@ import Image from 'next/image';
 import Link from 'next/link';
 import LoadingSpinner from '@/components/loading/LoadingSpinner';
 import GridSongItem from '@/components/GridSongItem';
+import ListSongItem from '@/components/ListSongItem';
 import { useAudioPlayer } from '@/contexts/AudioPlayerContext';
 import toast from 'react-hot-toast';
+import GridIcon from '@/components/icons/GridIcon';
+import ListIcon from '@/components/icons/ListIcon';
+import PlayIcon from '@/components/icons/PlayIcon';
+
+
 
 export default function PlaylistDetailPage() {
   const { id } = useParams();
   const [playlist, setPlaylist] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { setCurrentTrack, setQueue, isPlaying, currentTrack } = useAudioPlayer();
+  const [view, setView] = useState('list');
+  const { setSongsForPlayback, playSong, isPlaying, currentTrack } = useAudioPlayer();
 
   useEffect(() => {
     const fetchPlaylist = async () => {
@@ -36,13 +43,13 @@ export default function PlaylistDetailPage() {
 
   const handlePlayAll = () => {
     if (!playlist?.songs?.length) return;
-    setQueue(playlist.songs);
-    setCurrentTrack(playlist.songs[0]);
+    setSongsForPlayback(playlist.songs);
+    playSong(playlist.songs[0]);
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[calc(100vh-5em)]">
+      <div className="flex justify-center items-center min-h-screen">
         <LoadingSpinner />
       </div>
     );
@@ -50,7 +57,7 @@ export default function PlaylistDetailPage() {
 
   if (!playlist) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-5em)]">
+      <div className="flex flex-col items-center justify-center min-h-screen">
         <h1 className="text-2xl font-bold mb-4">Playlist not found</h1>
         <Link href="/playlists" className="text-blue-500 hover:underline">
           Back to playlists
@@ -60,10 +67,10 @@ export default function PlaylistDetailPage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-5em)] mx-auto">
+    <div className="min-h-screen mx-auto">
       {/* Full-width Header Section */}
-      <div className="relative mb-12">
-        <div className="relative h-[30vh] md:h-[40vh] lg:h-[50vh] w-full overflow-hidden">
+      <div className="relative mb-6">
+        <div className="relative h-[40vh] md:h-[30vh] lg:h-[40vh] w-full overflow-hidden">
           <Image
             src={playlist.cover || 'https://placehold.co/400x400'}
             alt={playlist.name}
@@ -71,11 +78,11 @@ export default function PlaylistDetailPage() {
             className="object-cover"
             unoptimized
           />
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 bg-black/70" />
         </div>
         
         <div className="absolute inset-x-0 bottom-0 p-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row md:items-center justify-between">
             <div>
               <h1 className="text-6xl font-bold text-white mb-2">{playlist.name}</h1>
               <p className="text-gray-300 mb-4">
@@ -91,11 +98,9 @@ export default function PlaylistDetailPage() {
             <div className="flex items-center gap-4">
               <button
                 onClick={handlePlayAll}
-                className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition flex items-center gap-2"
+                className="bg-blue-500 text-white text-sm px-6 py-2 rounded-full hover:bg-blue-600 transition flex items-center gap-2 cursor-pointer"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                  <path fillRule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clipRule="evenodd" />
-                </svg>
+                <PlayIcon className="w-5 h-5" />
                 Play All
               </button>
             </div>
@@ -103,16 +108,58 @@ export default function PlaylistDetailPage() {
         </div>
       </div>
 
-      {/* Songs Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      <section className="m-5">
+
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold mb-4">Songs</h2>
+          <button className="flex items-center gap-2"
+          onClick={() => setView(view === 'grid' ? 'list' : 'grid')}
+          >
+            {
+              view === 'grid' ? (
+                <GridIcon isActive={false} onClick={() => setView('grid')} />
+              ) : (
+                <ListIcon isActive={false} onClick={() => setView('list')} />
+              ) 
+            } 
+          </button>
+        </div>
+
+      {
+       
+       view === 'grid' ? (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {playlist.songs?.map((song) => (
           <GridSongItem
             key={song._id}
             song={song}
             isPlaying={isPlaying && currentTrack?._id === song._id}
+            playSong={() => playSong(song)}  
+            songCoverArt={song?.coverArt}
+            songTitle={song?.title}
+            songArtist={song?.artist}
           />
         ))}
       </div>
+        ) : (
+          <div className="">
+          {playlist.songs?.map((song) => (
+            <ListSongItem
+              key={song._id}
+              song={song}
+              isPlaying={isPlaying && currentTrack?._id === song._id}
+              playSong={() => playSong(song)}  
+              songCoverArt={song?.coverArt}
+              songTitle={song?.title}
+              songArtist={song?.artist}
+            />
+          ))}
+        </div>
+        )
+      }
+      </section>
+
+      
 
       {/* Empty State */}
       {(!playlist.songs || playlist.songs.length === 0) && (

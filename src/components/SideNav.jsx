@@ -61,10 +61,10 @@ export default function SideNav() {
 
   return (
     <>
-      <nav className={`sticky relative left-0 overflow-y-auto p-5 ${isExpanded ? 'w-60' : 'w-20'} bg-gray-100 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 ${ currentSong ? 'top-[5em] max-h-[calc(100vh-5em)]' : 'top-0 max-h-screen' } transition-all duration-300 ease-in-out z-40`}>
+      <nav className={`hidden md:block sticky relative left-0 overflow-y-auto py-5 ${isExpanded ? 'w-60' : 'w-20'} bg-gray-100 dark:bg-black border-r border-gray-200 dark:border-gray-800 ${ currentSong ? 'top-0 max-h-[calc(100vh-5em)]' : 'top-0 max-h-screen' } transition-all duration-300 ease-in-out z-40`}>
         {/* Logo */}
         <Link href="/">
-          <div className='flex items-center cursor-pointer gap-1 mb-6 ml-2'>
+          <div className='flex px-5 items-center cursor-pointer gap-0.5 mb-6 ml-2'>
             <Image src={XitoIcon} alt="Logo" className='block dark:hidden' width={28} height={28} />
             <Image src={XitoIconBlue} alt="Logo" width={28} className='hidden dark:block' height={28} />
             {isExpanded && (
@@ -92,14 +92,14 @@ export default function SideNav() {
 
         {/* Search */}
         {isExpanded && (
-          <form onSubmit={handleSearch} className='mb-2'>
+          <form onSubmit={handleSearch} className='mb-6 px-5'>
             <div className='relative'>
               <input
                 type='text'
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder='Search...'
-                className='w-full focus:outline-none border-0 rounded-lg px-4 py-2 text-base bg-white dark:bg-gray-800 dark:text-white transition'
+                className='w-full focus:outline-none border-0 rounded-lg px-4 py-2 text-base bg-white dark:bg-gray-900 dark:text-white transition'
               />
               <button 
                 type='submit' 
@@ -118,9 +118,9 @@ export default function SideNav() {
               <Link 
                 key={item.name} 
                 href={item.path} 
-                className={`flex items-center text-sm ${isExpanded ? 'space-x-3 px-3 py-2' : 'justify-center p-2'} rounded-lg transition text-gray-700 dark:text-gray-300 ${pathname === item.path 
-                  ? 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white' 
-                  : 'hover:bg-gray-200 dark:hover:bg-gray-900 dark:hover:text-gray-400'}`}
+                className={`flex items-center text-sm ${isExpanded ? 'space-x-3 px-5 py-2' : 'justify-center p-2'} transition text-gray-700 dark:text-gray-300 ${pathname === item.path 
+                  ? 'bg-blue-500 text-white dark:bg-gray-900 text-gray-900 dark:text-white' 
+                  : 'hover:bg-gray-200 dark:hover:bg-black dark:hover:text-gray-400'}`}
               >
                 <item.icon className={`w-4 h-4 ${isExpanded ? '' : 'w-5 h-5 cursor-pointer mx-auto'}`} />
                 {isExpanded && <span>{item.name}</span>}
@@ -129,9 +129,9 @@ export default function SideNav() {
               <button
                 key={item.name}
                 onClick={item.onClick}
-                className={`w-full flex text-sm items-center ${isExpanded ? 'space-x-3 px-3 py-2' : 'justify-center p-2'} rounded-lg transition text-gray-700 dark:text-gray-300 ${item.active 
-                  ? 'bg-gray-200 dark:bg-gray-900 text-gray-900 dark:text-white' 
-                  : 'hover:bg-gray-200 dark:hover:bg-gray-900 dark:hover:text-gray-400'}`}
+                className={`w-full flex text-sm items-center ${isExpanded ? 'space-x-3 px-3 py-2' : 'justify-center p-2'} transition text-gray-700 dark:text-gray-300 ${item.active 
+                  ? 'bg-blue-600 dark:bg-black text-gray-900 dark:text-white' 
+                  : 'hover:bg-blue-600 dark:hover:bg-black dark:hover:text-gray-400'}`}
               >
                 <item.icon className={`w-4 h-4 ${isExpanded ? '' : 'mx-auto'}`} />
                 {isExpanded && <span>{item.name}</span>}
@@ -153,7 +153,7 @@ export default function SideNav() {
                   className='rounded-full'
                 />
               ) : (
-                <div className='w-10 h-10 cursor-pointer font-bold text-gray-500 dark:text-gray-400 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center'>
+                <div className='w-10 h-10 cursor-pointer font-bold text-gray-500 dark:text-gray-400 rounded-full bg-gray-200 dark:bg-gray-900 flex items-center justify-center'>
                   {user?.displayName ? user?.displayName[0].toUpperCase() : user?.email.split('@')[0][0].toUpperCase()}
                 </div>
               )}
@@ -196,7 +196,7 @@ export default function SideNav() {
                   className='rounded-full'
                 />
               ) : (
-                <div className='w-10 h-10 cursor-pointer font-bold text-gray-500 dark:text-gray-400 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center'>
+                <div className='w-10 h-10 cursor-pointer font-bold text-gray-500 dark:text-gray-400 rounded-full bg-gray-200 dark:bg-gray-900 flex items-center justify-center'>
                   {user?.displayName ? user?.displayName[0].toUpperCase() : user?.email.split('@')[0][0].toUpperCase()}
                 </div>
               )}

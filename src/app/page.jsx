@@ -8,22 +8,22 @@ export default function Home() {
   const { theme } = useTheme();
 
   return (
-    <div className="min-h-screen p-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+    <div className="min-h-screen p-4 bg-white dark:bg-black text-gray-900 dark:text-white">
           <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
       
       {user ? (
         <div className="flex gap-6">
-          <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg">
+          <div className="bg-gray-100 dark:bg-gray-900 p-6 rounded-lg">
             <h2 className="text-xl font-semibold mb-4">Welcome, {user.displayName || user.email}</h2>
             <p className="text-gray-600 dark:text-gray-300">Your music journey starts here.</p>
           </div>
           
-          <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg">
+          <div className="bg-gray-100 dark:bg-gray-900 p-6 rounded-lg">
             <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
             <p className="text-gray-500 dark:text-gray-400">No recent activity</p>
           </div>
           
-          <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg">
+          <div className="bg-gray-100 dark:bg-gray-900 p-6 rounded-lg">
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <div className="space-y-2">
               <a href="/upload" className="block text-blue-600 dark:text-blue-400 hover:underline">Upload a Song</a>
@@ -34,7 +34,7 @@ export default function Home() {
         </div>
       ) : (
         <div className="flex items-center justify-center h-full">
-          <div className="text-center max-w-md bg-gray-100 dark:bg-gray-800 p-8 rounded-lg">
+          <div className="text-center max-w-md bg-gray-100 dark:bg-gray-900 p-8 rounded-lg">
             <h2 className="text-2xl font-bold mb-4">Welcome to Xitoplay</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
               Discover, upload, and share your favorite music. Create playlists, 
@@ -49,7 +49,7 @@ export default function Home() {
               </a>
               <a 
                 href="/auth/signup" 
-                className="block w-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+                className="block w-full bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-white py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
               >
                 Sign Up
               </a>

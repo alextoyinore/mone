@@ -73,7 +73,7 @@ export default function ExplorePage() {
   );
 
   return (
-    <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+    <div className="min-h-screen p-8 bg-white dark:bg-black text-gray-900 dark:text-white">
       <h1 className="text-3xl font-bold mb-6">Explore Public Playlists</h1>
       
       <div className="mb-6 flex space-x-4">
@@ -82,13 +82,13 @@ export default function ExplorePage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search playlists..."
-          className="flex-grow px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-800 dark:text-white"
+          className="flex-grow px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-900 dark:text-white"
         />
         
         <select 
           value={genre}
           onChange={(e) => setGenre(e.target.value)}
-          className="px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-800 dark:text-white"
+          className="px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-900 dark:text-white"
         >
           <option value="">All Genres</option>
           <option value="Lo-Fi">Lo-Fi</option>
@@ -102,7 +102,7 @@ export default function ExplorePage() {
         {filteredPlaylists.map((playlist) => (
           <div 
             key={playlist.id} 
-            className="bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
+            className="bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
           >
             <Image 
               src={playlist.coverImage} 

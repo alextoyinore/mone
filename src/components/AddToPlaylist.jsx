@@ -40,7 +40,7 @@ export default function AddToPlaylist({ song }) {
   return (
     <div className="inline-block relative">
       <button
-        className="w-10 h-10 flex items-center justify-center rounded-full shadow-md bg-white/80 dark:bg-gray-800/80 border border-green-200 dark:border-green-700 text-green-600 text-xl hover:text-green-800 hover:scale-110 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-400"
+        className="w-10 h-10 flex items-center justify-center rounded-full shadow-md bg-white/80 dark:bg-gray-900/80 border border-green-200 dark:border-green-700 text-green-600 text-xl hover:text-green-800 hover:scale-110 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-400"
         onClick={() => setShow(s => !s)}
         title="Add to playlist"
         aria-label="Add to playlist"
@@ -48,8 +48,8 @@ export default function AddToPlaylist({ song }) {
         ➕
       </button>
       {show && (
-        <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl z-50 animate-fade-in">
-          <div className="font-bold p-3 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 rounded-t-xl">Add to Playlist</div>
+        <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-black border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl z-50 animate-fade-in">
+          <div className="font-bold p-3 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 rounded-t-xl">Add to Playlist</div>
           {playlists.length === 0 ? (
             <div className="p-3 text-gray-500">No playlists found.</div>
           ) : playlists.map(pl => (

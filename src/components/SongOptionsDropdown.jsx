@@ -44,7 +44,7 @@ export default function SongOptionsDropdown({ song }) {
       {isOpen && (
         <div 
           ref={dropdownRef}
-          className="absolute right-0 top-full mt-2 w-48 bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 origin-bottom-right animate-dropdown">
+          className="absolute right-0 top-full mt-2 w-48 bg-white/60 dark:bg-gray-900/60 backdrop-blur-md rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 origin-bottom-right animate-dropdown">
           <Link 
             href={`/songs/${song._id}`} 
             className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-blue/10 transition cursor-pointer"

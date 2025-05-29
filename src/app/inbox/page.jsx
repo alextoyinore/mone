@@ -74,7 +74,7 @@ export default function InboxPage() {
 
 
   return (
-    <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white flex">
+    <div className="min-h-screen p-8 bg-white dark:bg-black text-gray-900 dark:text-white flex">
       {/* Conversations List */}
       <div className="w-1/3 border-r border-gray-200 dark:border-gray-800 pr-4">
         <h1 className="text-3xl font-bold mb-6">Messages</h1>
@@ -84,7 +84,7 @@ export default function InboxPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search conversations..."
-          className="w-full px-4 py-2 mb-4 border rounded-lg bg-gray-100 dark:bg-gray-800 dark:text-white"
+          className="w-full px-4 py-2 mb-4 border rounded-lg bg-gray-100 dark:bg-gray-900 dark:text-white"
         />
 
         <div className="space-y-2">
@@ -92,9 +92,9 @@ export default function InboxPage() {
             <button
               key={conv.id}
               onClick={() => setSelectedConversation(conv)}
-              className={`w-full flex items-center p-3 rounded-lg text-left hover:bg-gray-100 dark:hover:bg-gray-800 transition ${
+              className={`w-full flex items-center p-3 rounded-lg text-left hover:bg-gray-100 dark:hover:bg-gray-900 transition ${
                 selectedConversation?.id === conv.id 
-                  ? 'bg-gray-200 dark:bg-gray-700' 
+                  ? 'bg-gray-200 dark:bg-gray-900' 
                   : ''
               }`}
             >
@@ -149,7 +149,7 @@ export default function InboxPage() {
               </div>
             </div>
 
-            <div className="flex-grow overflow-y-auto mb-4 space-y-3 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+            <div className="flex-grow overflow-y-auto mb-4 space-y-3 p-4 bg-gray-100 dark:bg-gray-900 rounded-lg">
               {/* Placeholder for message history */}
               <div className="text-center text-gray-500 dark:text-gray-400">
                 No message history yet
@@ -162,7 +162,7 @@ export default function InboxPage() {
                 value={messageInput}
                 onChange={(e) => setMessageInput(e.target.value)}
                 placeholder="Type a message..."
-                className="flex-grow px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-800 dark:text-white"
+                className="flex-grow px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-900 dark:text-white"
               />
               <button 
                 type="submit"

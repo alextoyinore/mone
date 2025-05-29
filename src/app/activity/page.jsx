@@ -56,7 +56,7 @@ export default function ActivityPage() {
   }
 
   return (
-        <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+        <div className="min-h-screen p-8 bg-white dark:bg-black text-gray-900 dark:text-white">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Recent Activity</h1>
         
@@ -66,7 +66,7 @@ export default function ActivityPage() {
             className={`px-4 py-2 rounded-lg transition ${
               filter === 'all' 
                 ? 'bg-blue-600 text-white' 
-                : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                : 'bg-gray-200 dark:bg-gray-900 text-gray-700 dark:text-gray-300'
             }`}
           >
             All
@@ -76,7 +76,7 @@ export default function ActivityPage() {
             className={`px-4 py-2 rounded-lg transition ${
               filter === 'playlist_created' 
                 ? 'bg-blue-600 text-white' 
-                : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                : 'bg-gray-200 dark:bg-gray-900 text-gray-700 dark:text-gray-300'
             }`}
           >
             Playlists
@@ -86,7 +86,7 @@ export default function ActivityPage() {
             className={`px-4 py-2 rounded-lg transition ${
               filter === 'track_liked' 
                 ? 'bg-blue-600 text-white' 
-                : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                : 'bg-gray-200 dark:bg-gray-900 text-gray-700 dark:text-gray-300'
             }`}
           >
             Tracks
@@ -96,7 +96,7 @@ export default function ActivityPage() {
             className={`px-4 py-2 rounded-lg transition ${
               filter === 'collaboration_started' 
                 ? 'bg-blue-600 text-white' 
-                : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                : 'bg-gray-200 dark:bg-gray-900 text-gray-700 dark:text-gray-300'
             }`}
           >
             Collaborations
@@ -113,7 +113,7 @@ export default function ActivityPage() {
           {filteredActivities.map((activity) => (
             <div 
               key={activity.id} 
-              className="flex items-center p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition"
+              className="flex items-center p-4 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-md hover:shadow-lg transition"
             >
               <div className="text-3xl mr-4">{activity.icon}</div>
               

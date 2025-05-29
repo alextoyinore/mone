@@ -155,7 +155,7 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen dark:from-gray-900 dark:to-gray-800">
       <div className="px-6 py-6">
-        <div className="dark:bg-gray-800">
+        <div className="dark:bg-gray-900">
           
           <div className="flex flex-col gap-4">
             <div className="flex items-center">
@@ -219,7 +219,7 @@ export default function ProfilePage() {
                 <div className="flex gap-2 mt-3">
                   <button onClick={logout} className="text-red-600 dark:text-red-400 cursor-pointer px-5 py-1 rounded-full hover:bg-red-100 transition-colors bg-red-50 dark:bg-red-800 text-sm">Logout</button>
 
-                  <button onClick={handleUpdateProfile} className="text-gray-600 dark:text-gray-400 cursor-pointer px-5 py-1 rounded-full hover:bg-gray-100 transition-colors bg-gray-50 dark:bg-gray-800 text-sm">Update Profile</button>
+                  <button onClick={handleUpdateProfile} className="text-gray-600 dark:text-gray-400 cursor-pointer px-5 py-1 rounded-full hover:bg-gray-100 transition-colors bg-gray-50 dark:bg-gray-900 text-sm">Update Profile</button>
 
                   {
                     !isArtist && (

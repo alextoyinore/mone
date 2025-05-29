@@ -71,7 +71,7 @@ export default function AlbumsPage() {
   }
 
   return (
-    <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+    <div className="min-h-screen p-8 bg-white dark:bg-black text-gray-900 dark:text-white">
       <h1 className="text-3xl font-bold mb-6">Albums</h1>
       
       <div className="mb-6 flex space-x-4">
@@ -80,13 +80,13 @@ export default function AlbumsPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search albums..."
-          className="flex-grow px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-800 dark:text-white"
+          className="flex-grow px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-900 dark:text-white"
         />
         
         <select 
           value={genreFilter}
           onChange={(e) => setGenreFilter(e.target.value)}
-          className="px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-800 dark:text-white"
+          className="px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-900 dark:text-white"
         >
           <option value="">All Genres</option>
           <option value="Electronic">Electronic</option>
@@ -97,7 +97,7 @@ export default function AlbumsPage() {
         <select 
           value={yearFilter}
           onChange={(e) => setYearFilter(e.target.value)}
-          className="px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-800 dark:text-white"
+          className="px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-900 dark:text-white"
         >
           <option value="">All Years</option>
           <option value="2023">2023</option>
@@ -115,7 +115,7 @@ export default function AlbumsPage() {
           {filteredAlbums.map((album) => (
             <div 
               key={album.id} 
-              className="bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
+              className="bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
             >
               <div className="relative h-48 w-full">
                 <Image 

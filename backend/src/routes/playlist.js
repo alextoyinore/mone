@@ -8,10 +8,16 @@ const router = express.Router();
 // Get all playlists for a user
 router.get('/', async (req, res) => {
   try {
-    const { user } = req.body;
+    const { user } = req.query;
+
     if (!user) return res.status(400).json({ error: 'User required' });
+    
     // Find playlists owned by user or where user is a collaborator
-    const playlists = await Playlist.find({ $or: [ { user }, { collaborators: user } ] }).populate('songs');
+    const playlists = await Playlist.find({ $or: [ { user }, { collaborators: user } ] }).populate({
+      path: 'songs',
+      populate: { path: 'artist' }
+    })
+    
     res.json(playlists);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -21,7 +27,10 @@ router.get('/', async (req, res) => {
 // Get all public playlists
 router.get('/public', async (req, res) => {
   try {
-    const playlists = await Playlist.find({ isPublic: true }).populate('songs');
+    const playlists = await Playlist.find({ isPublic: true }).populate({
+      path: 'songs',
+      populate: { path: 'artist' }
+    }); 
     res.json(playlists);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -31,7 +40,10 @@ router.get('/public', async (req, res) => {
 // Get a playlist by id
 router.get('/:id', async (req, res) => {
   try {
-    const playlist = await Playlist.findById(req.params.id).populate('songs');
+    const playlist = await Playlist.findById(req.params.id).populate({
+      path: 'songs',
+      populate: { path: 'artist' }
+    });
     if (!playlist) return res.status(404).json({ error: 'Playlist not found' });
     res.json(playlist);
   } catch (err) {
@@ -164,7 +176,10 @@ router.put('/:id', upload.single('cover'), async (req, res) => {
 // Get public playlist by slug
 router.get('/public/:slug', async (req, res) => {
   try {
-    const playlist = await Playlist.findOne({ slug: req.params.slug, isPublic: true }).populate('songs');
+    const playlist = await Playlist.findOne({ slug: req.params.slug, isPublic: true }).populate({
+      path: 'songs',
+      populate: { path: 'artist' }
+    });
     if (!playlist) return res.status(404).json({ error: 'Playlist not found' });
     res.json(playlist);
   } catch (err) {

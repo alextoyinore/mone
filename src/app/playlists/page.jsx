@@ -30,11 +30,11 @@ export default function PlaylistsPage() {
       try {
         setLoading(true);
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/playlists?user=${user.email}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
       
       if (!response.ok) {
         throw new Error('Failed to fetch playlists');
@@ -116,7 +116,7 @@ export default function PlaylistsPage() {
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-black min-h-[calc(100vh-5em)] flex justify-center items-center">
+      <div className="bg-white dark:bg-black min-h-screen flex justify-center items-center">
         <LoadingSpinner />
       </div>
     );  
@@ -124,7 +124,7 @@ export default function PlaylistsPage() {
 
   if (error) {
     return (
-      <div className="bg-white dark:bg-black min-h-[calc(100vh-5em)] flex justify-center items-center">
+      <div className="bg-white dark:bg-black min-h-screen flex justify-center items-center">
         <div className="text-red-500 text-center">{error}</div>
       </div>
     );
@@ -145,7 +145,7 @@ export default function PlaylistsPage() {
             value={newPlaylistName}
             onChange={(e) => setNewPlaylistName(e.target.value)}
             placeholder="New Playlist Name"
-            className="px-3 py-2 rounded-lg focus:outline-none bg-gray-100 dark:bg-gray-800 dark:text-white w-64"
+            className="px-3 py-2 rounded-lg focus:outline-none bg-gray-100 dark:bg-gray-900 dark:text-white w-64"
           />
           <button 
             type="submit" 
@@ -182,7 +182,7 @@ export default function PlaylistsPage() {
               className="group relative cursor-pointer"
             >
                <Link href={`/playlists/${playlist._id}`} className="absolute inset-0 cursor-pointer">
-                <div className="aspect-square relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800">
+                <div className="aspect-square relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-900">
                   {/* Playlist Cover */}
                 
                     <Image
@@ -221,7 +221,7 @@ export default function PlaylistsPage() {
           ) : (
             <div 
               key={playlist._id}
-              className="flex items-center justify-between odd:bg-white even:bg-gray-50 dark:odd:bg-gray-900 dark:even:bg-gray-800 hover:bg-blue-500 cursor-pointer p-4 transition"
+              className="flex items-center justify-between odd:bg-white even:bg-gray-50 dark:odd:bg-black dark:even:bg-gray-900 hover:bg-blue-500 cursor-pointer p-4 transition"
             >
               <Link href={`/playlists/${playlist._id}`} className="flex items-center space-x-4">
                 <Image 

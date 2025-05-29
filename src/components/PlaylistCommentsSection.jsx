@@ -40,12 +40,12 @@ export default function PlaylistCommentsSection({ playlistId }) {
   };
 
   return (
-    <div className="mt-8 bg-white/80 dark:bg-gray-900/80 rounded-xl shadow-lg p-6">
+    <div className="mt-8 bg-white/80 dark:bg-black/80 rounded-xl shadow-lg p-6">
       <h3 className="text-xl font-bold mb-4 text-blue-700 dark:text-blue-400">Comments</h3>
       {user && (
         <form onSubmit={postComment} className="flex gap-2 mb-6">
           <input
-            className="border border-gray-300 dark:border-gray-700 p-3 rounded-lg flex-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 transition"
+            className="border border-gray-300 dark:border-gray-700 p-3 rounded-lg flex-1 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 transition"
             placeholder="Add a comment..."
             value={text}
             onChange={e => setText(e.target.value)}
@@ -60,7 +60,7 @@ export default function PlaylistCommentsSection({ playlistId }) {
         <div className="flex flex-col gap-3">
           {comments.length === 0 && <div className="text-gray-500">No comments yet.</div>}
           {comments.map(com => (
-            <div key={com._id} className="flex items-start gap-3 bg-gray-50 dark:bg-gray-800 rounded-lg p-3 shadow-sm">
+            <div key={com._id} className="flex items-start gap-3 bg-gray-50 dark:bg-gray-900 rounded-lg p-3 shadow-sm">
               <div className="flex-1">
                 <div className="font-semibold text-blue-700 dark:text-blue-300">{com.user}</div>
                 <div className="text-gray-800 dark:text-gray-100 mb-1">{com.text}</div>

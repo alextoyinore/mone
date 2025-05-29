@@ -60,8 +60,8 @@ export default function NotificationsPanel({ open, onClose }) {
   const filteredNotifications = notifications.filter(n => filter[n.type]);
 
   return (
-    <div className={`fixed top-0 right-0 h-full w-96 bg-white/90 dark:bg-gray-900/90 border-l border-gray-200 dark:border-gray-800 transition-transform duration-300 ease-in-out ${open ? 'translate-x-0' : 'translate-x-full'}`}>
-      <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800">
+    <div className={`fixed top-0 right-0 h-full w-96 bg-white/90 dark:bg-black/90 border-l border-gray-200 dark:border-gray-800 transition-transform duration-300 ease-in-out ${open ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
         <div className="font-bold text-xl text-blue-700 dark:text-blue-400 flex items-center gap-2">
           <span>🔔</span> Notifications
         </div>
@@ -79,7 +79,7 @@ export default function NotificationsPanel({ open, onClose }) {
                 onClick={() => setFilter(prev => ({ ...prev, [type]: !prev[type] }))}
                 className={`px-2 py-1 rounded text-xs ${filter[type] 
                   ? 'bg-primary/10 text-primary' 
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'}`}
+                  : 'bg-gray-100 dark:bg-gray-900 text-gray-500 dark:text-gray-400'}`}
               >
                 {type}
               </button>
@@ -107,7 +107,7 @@ export default function NotificationsPanel({ open, onClose }) {
                 href={notification.link || '#'}
                 className={`block p-3 rounded-lg transition ${
                   notification.read 
-                    ? 'bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700' 
+                    ? 'bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-900' 
                     : 'bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30'
                 }`}
               >

@@ -18,7 +18,7 @@ export default function ListSongItem({
   return (
     <div 
       key={song._id} 
-      className={`flex items-center p-3 transition-all duration-300 group cursor-pointer hover:bg-blue-500 dark:hover:bg-blue-900 hover:text-white dark:hover:text-white ${isCurrentSong ? 'bg-blue-400 dark:bg-blue-600 text-white' : 'odd:bg-white even:bg-gray-50 dark:odd:bg-gray-900 dark:even:bg-gray-800'}`}
+      className={`flex items-center p-3 transition-all duration-300 group cursor-pointer hover:bg-blue-500 dark:hover:bg-blue-900 hover:text-white dark:hover:text-white ${isCurrentSong ? 'bg-blue-400 dark:bg-blue-600 text-white' : 'odd:bg-white even:bg-gray-50 dark:odd:bg-black dark:even:bg-gray-900'}`}
     >
       <Image 
         src={song.coverArt || 'https://placehold.co/100x100'} 

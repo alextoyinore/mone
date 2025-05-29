@@ -25,8 +25,8 @@ export default function ThemeSwitcher({ open, onClose }) {
   }
 
   return (
-    <div className={`fixed top-0 right-0 h-full w-96 bg-white/90 dark:bg-gray-900/90 border-l border-gray-200 dark:border-gray-800 transition-transform duration-300 ease-in-out ${open ? 'translate-x-0' : 'translate-x-full'}`}>
-      <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800">
+    <div className={`fixed top-0 right-0 h-full w-96 bg-white/90 dark:bg-black/90 border-l border-gray-200 dark:border-gray-800 transition-transform duration-300 ease-in-out ${open ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
         <div className="font-bold text-xl text-blue-700 dark:text-blue-400 flex items-center gap-2">
           <span>🎨</span> Theme Selector
         </div>
@@ -40,7 +40,7 @@ export default function ThemeSwitcher({ open, onClose }) {
           <button
             key={option.value}
             onClick={() => { setTheme(option.value); onClose(); }}
-            className={`w-full flex items-center justify-between p-4 rounded-lg transition ${theme === option.value ? 'bg-primary/10 text-primary' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
+            className={`w-full flex items-center justify-between p-4 rounded-lg transition ${theme === option.value ? 'bg-primary/10 text-primary' : 'hover:bg-gray-100 dark:hover:bg-gray-900'}`}
           >
             <div className="flex items-center space-x-4">
               <span className="text-2xl">{option.icon}</span>

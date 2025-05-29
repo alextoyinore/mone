@@ -16,7 +16,7 @@ export default function Player() {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
-      <div className="relative bg-white/90 dark:bg-gray-900/90 rounded-3xl shadow-2xl p-8 flex flex-col items-center w-full max-w-md border border-gray-200 dark:border-gray-800 animate-fade-in">
+      <div className="relative bg-white/90 dark:bg-black/90 rounded-3xl shadow-2xl p-8 flex flex-col items-center w-full max-w-md border border-gray-200 dark:border-gray-800 animate-fade-in">
         <button className="absolute top-4 right-4 text-2xl hover:text-red-500 transition" onClick={pause} title="Close player">✖️</button>
         {current.coverArt && <img src={current.coverArt} alt="cover" className="w-32 h-32 object-cover rounded mb-4" />}
         <div className="font-bold text-xl mb-1">{current.title}</div>

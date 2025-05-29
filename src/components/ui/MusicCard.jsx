@@ -2,7 +2,7 @@ export const MusicCard = ({ title, subtitle, image, onClick }) => {
   return (
     <div 
       onClick={onClick}
-      className="group bg-white dark:bg-gray-800 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 cursor-pointer"
+      className="group bg-white dark:bg-gray-900 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-900 transition-all duration-300 cursor-pointer"
     >
       <div className="relative aspect-square mb-4">
         <img 

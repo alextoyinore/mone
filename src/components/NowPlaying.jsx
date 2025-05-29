@@ -36,7 +36,7 @@ export default function NowPlaying({ isOpen, onClose }) {
 
   const songTitle = parseSongValue(currentSong.name || currentSong.title, 'Unknown Song');
   const songArtist = parseSongValue(currentSong.artist, 'Unknown Artist');
-  const songDescription = parseSongValue(currentSong.artist, 'Unknown Artist');
+  const songDescription = parseSongValue(currentSong.description, 'No Description');
   const songCoverArt = parseSongValue(currentSong.coverArt, 'https://placehold.co/1920x1080');
 
   // Get next songs from queue
@@ -56,9 +56,9 @@ export default function NowPlaying({ isOpen, onClose }) {
 
       {/* Main content */}
       <div className="fixed inset-0 overflow-y-auto">
-        <div className="flex min-h-full items-center justify-center p-4 relative">
+        <div className="flex flex-col lg:flex-row min-h-full items-center justify-center relative">
           <div 
-            className="w-full max-w-6xl h-full rounded-2xl bg-black/50 backdrop-blur-md"
+            className="w-full lg:w-1/2 h-full rounded-2xl bg-black/50 backdrop-blur-md"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -66,13 +66,13 @@ export default function NowPlaying({ isOpen, onClose }) {
           >
             {/* Close button */}
             <button 
-              className="absolute top-5 right-5 text-gray-300 hover:text-white transition-colors"
+              className="absolute top-5 right-5 text-gray-300 hover:text-white transition-colors z-50"
               onClick={onClose}
             >
               <CloseIcon className="w-6 h-6 cursor-pointer" />
             </button>
             {/* Background image */}
-            <div className="absolute inset-0">  
+            <div className="absolute inset-0 w-full h-full">  
               <Image
                 src={songCoverArt}
                 alt={`Cover art for ${songTitle}`}
@@ -85,12 +85,13 @@ export default function NowPlaying({ isOpen, onClose }) {
             {/* Content container */}
             <div className="relative flex h-full">
               {/* Left side - Song info and controls */}
-              <div className="w-1/2 p-12">
+              <div className="w-full lg:w-1/2 p-12">
                 <div className="flex flex-col h-full justify-between">
                   {/* Song info */}
                   <div>
                     <h1 className="text-6xl font-bold mb-2 text-white">{songTitle}</h1>
                     <p className="text-xl text-gray-300 mb-4">{songArtist}</p>
+                    {/* <p className="text-sm text-gray-400 mb-4">{songDescription}</p> */}
                     
                     {/* Progress bar */}
                     <div className="relative h-1 bg-gray-400/50 rounded-full mt-12">
@@ -102,17 +103,17 @@ export default function NowPlaying({ isOpen, onClose }) {
                   </div>
 
                   {/* Transport controls */}
-                  <div className="flex items-center justify-between mt-4">
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-5 mt-8">
                     <div className="flex items-center space-x-4">
                       <ShuffleIcon 
                         onClick={toggleShuffleMode} 
                         isActive={isShuffling}
-                        className="w-8 h-8 text-gray-400 hover:text-white cursor-pointer"
+                        className="w-8 h-8 text-gray-400 hover:text-white cursor-pointer opacity-50 hover:opacity-100"
                       />
 
                       <button 
                         onClick={playPreviousSong}
-                        className="text-gray-400 hover:text-white transition"
+                        className="text-gray-400 hover:text-white transition opacity-50 hover:opacity-100"
                       >
                         <PreviousIcon className="w-8 h-8 cursor-pointer" />
                       </button>
@@ -122,15 +123,15 @@ export default function NowPlaying({ isOpen, onClose }) {
                         className="text-gray-400 hover:text-white transition flex items-center justify-center"
                       >
                         {isPlaying ? (
-                          <PauseIcon className="w-12 h-12 cursor-pointer" />
+                          <PauseIcon className="w-12 h-12 cursor-pointer opacity-50 hover:opacity-100" />
                         ) : (
-                          <PlayIcon className="w-12 h-12 cursor-pointer" />
+                          <PlayIcon className="w-12 h-12 cursor-pointer opacity-50 hover:opacity-100" />
                         )}
                       </button>
                       
                       <button 
                         onClick={playNextSong}
-                        className="text-gray-400 hover:text-white transition"
+                        className="text-gray-400 hover:text-white transition opacity-50 hover:opacity-100"
                       >
                         <NextIcon className="w-8 h-8 cursor-pointer" />
                       </button>
@@ -138,18 +139,18 @@ export default function NowPlaying({ isOpen, onClose }) {
                       <LoopIcon 
                         onClick={toggleLoopMode} 
                         isActive={loopMode !== 0}
-                        className="w-8 h-8 text-gray-400 hover:text-white cursor-pointer"
+                        className="w-8 h-8 text-gray-400 hover:text-white cursor-pointer opacity-50 hover:opacity-100"
                       />
                     </div>
                   {/* Action buttons */}
                   <div className="flex items-center space-x-4">
-                    <button className="text-gray-400 hover:text-white transition">
+                    <button className="text-gray-400 hover:text-white transition opacity-50 hover:opacity-100">
                       <FavoriteIcon className="w-8 h-8 cursor-pointer" />
                     </button>
-                    <button className="text-gray-400 hover:text-white transition">
+                    <button className="text-gray-400 hover:text-white transition opacity-50 hover:opacity-100">
                       <ShareIcon className="w-8 h-8 cursor-pointer" />
                     </button>
-                    <button className="text-gray-400 hover:text-white transition">
+                    <button className="text-gray-400 hover:text-white transition opacity-50 hover:opacity-100">
                       <AddToPlaylistIcon className="w-8 h-8 cursor-pointer" />
                     </button>
                   </div>
