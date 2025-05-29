@@ -13,15 +13,17 @@ import TrashIcon from '@/components/icons/TrashIcon';
 
 import toast, { Toaster } from 'react-hot-toast';
 import PlayIcon from '@/components/icons/PlayIcon';
+import { useAudioPlayer } from '@/contexts/AudioPlayerContext';
 
 export default function PlaylistsPage() {
   const { user } = useAuth();
   const [playlists, setPlaylists] = useState([]);
   const [newPlaylistName, setNewPlaylistName] = useState('');
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
-  const [viewMode, setViewMode] = useState('list'); // 'grid' or 'list'
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { setSongsForPlayback } = useAudioPlayer();
 
   useEffect(() => {
     const fetchPlaylists = async () => {
@@ -134,7 +136,7 @@ export default function PlaylistsPage() {
     <>
     <Toaster />
 
-    <div className="min-h-screen p-8 bg-white dark:bg-black text-gray-900 dark:text-white">
+    <div className="min-h-screen p-4 bg-white dark:bg-black text-gray-900 dark:text-white">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">My Playlists</h1>
         
@@ -188,7 +190,8 @@ export default function PlaylistsPage() {
                     <Image
                       src={playlist.cover || 'https://placehold.co/400x400'}
                       alt={playlist.name}
-                      fill
+                      width={300}
+                      height={300}
                       className="object-cover"
                       unoptimized
                     />
@@ -198,7 +201,7 @@ export default function PlaylistsPage() {
                   
                   {/* Action Buttons */}
                   <button 
-                    onClick={() => playPlaylist(playlist)}
+                    onClick={() => setSongsForPlayback(playlist.songs)}
                     className="absolute bottom-2 cursor-pointer left-2 w-10 h-10 flex items-center justify-center bg-white/20 backdrop-blur-sm text-white rounded-full hover:bg-white/30 transition opacity-0 group-hover:opacity-100 z-20"
                   >
                     <PlayIcon className="w-5 h-5" />
@@ -221,7 +224,7 @@ export default function PlaylistsPage() {
           ) : (
             <div 
               key={playlist._id}
-              className="flex items-center justify-between odd:bg-white even:bg-gray-50 dark:odd:bg-black dark:even:bg-gray-900 hover:bg-blue-500 cursor-pointer p-4 transition"
+              className="flex items-center justify-between odd:bg-white even:bg-gray-50 dark:odd:bg-black dark:even:bg-gray-900 hover:bg-blue-500 cursor-pointer p-2 transition"
             >
               <Link href={`/playlists/${playlist._id}`} className="flex items-center space-x-4">
                 <Image 

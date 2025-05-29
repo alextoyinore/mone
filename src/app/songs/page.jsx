@@ -20,7 +20,7 @@ export default function SongsPage() {
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [viewMode, setViewMode] = useState('list'); // 'grid' or 'list'
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
 
   // Safely extract primitive values from an object
   const extractPrimitiveValue = (obj, props, fallback = '') => {

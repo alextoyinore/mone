@@ -12,7 +12,7 @@ import toast from 'react-hot-toast';
 import GridIcon from '@/components/icons/GridIcon';
 import ListIcon from '@/components/icons/ListIcon';
 import PlayIcon from '@/components/icons/PlayIcon';
-
+import PauseIcon from '@/components/icons/PauseIcon';
 
 
 export default function PlaylistDetailPage() {
@@ -97,11 +97,17 @@ export default function PlaylistDetailPage() {
             
             <div className="flex items-center gap-4">
               <button
-                onClick={handlePlayAll}
-                className="bg-green-400 text-white text-sm px-4 py-2 rounded-full hover:bg-green-600 transition flex items-center gap-2 cursor-pointer"
+                onClick={() => handlePlayAll()}
+                className="bg-blue-500 text-white text-sm px-4 py-2 rounded-full hover:bg-blue-600 transition flex items-center gap-2 cursor-pointer"
               >
-                <PlayIcon className="w-5 h-5" />
-                Play All
+                {
+                  isPlaying && playlist.songs.includes(currentTrack) ? (
+                    <PauseIcon className="w-5 h-5" />
+                  ) : (
+                    <PlayIcon className="w-5 h-5" />
+                  ) 
+                }
+                {isPlaying && playlist.songs.includes(currentTrack) ? 'Pause' : 'Play All'}
               </button>
             </div>
           </div>
@@ -148,10 +154,7 @@ export default function PlaylistDetailPage() {
               key={song._id}
               song={song}
               isPlaying={isPlaying && currentTrack?._id === song._id}
-              playSong={() => playSong(song)}  
-              songCoverArt={song?.coverArt}
-              songTitle={song?.title}
-              songArtist={song?.artist}
+              playSong={() => playSong(song)} 
             />
           ))}
         </div>

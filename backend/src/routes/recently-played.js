@@ -2,17 +2,17 @@ const express = require('express');
 const Song = require('../models/Song');
 const User = require('../models/User');
 const router = express.Router();
-const verifyFirebaseToken  = require('../middleware/verifyFirebaseToken');
 
 
 // Add song to user's recently played list (with timestamp)
-router.post('/', verifyFirebaseToken, async (req, res) => {
-  const { song } = req.body;
-  if (!song) return res.status(400).json({ error: 'Song required' });
+router.post('/', async (req, res) => {
+  let { user } = req.query;
+  let { song } = req.body;
+  if (!song || !user) return res.status(400).json({ error: 'Song and user required' });
 
   try {
     // Get user
-    const user = await User.findById(req.user.uid);
+    user = await User.findOne({ email: user });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -25,7 +25,8 @@ router.post('/', verifyFirebaseToken, async (req, res) => {
     } else {
       // Add new entry if not already present
       if (user.recentlyPlayed.length >= 100) {
-        return res.status(400).json({ error: 'Recently played list is full. Please remove some songs to add more.' });
+        // Remove the oldest entry (first in the array)
+        user.recentlyPlayed.shift();
       }
       user.recentlyPlayed.push({ song, playedAt: new Date() });
     }
@@ -39,9 +40,12 @@ router.post('/', verifyFirebaseToken, async (req, res) => {
 });
 
 // Get user's recently played songs (most recent first, up to 20)
-router.get('/', verifyFirebaseToken, async (req, res) => {
+router.get('/', async (req, res) => {
+  let { user } = req.query;
+  if (!user) return res.status(400).json({ error: 'User required' });
+
   try {
-    const user = await User.findById(req.user.uid);
+    user = await User.findOne({ email: user });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -75,9 +79,12 @@ router.get('/', verifyFirebaseToken, async (req, res) => {
 });
 
 // Remove a song from user's recently played
-router.delete('/:songId', verifyFirebaseToken, async (req, res) => {
+router.delete('/:songId', async (req, res) => {
+  let { user } = req.query;
+  if (!user) return res.status(400).json({ error: 'User required' });
+
   try {
-    const user = await User.findById(req.user.uid);
+    user = await User.findOne({ email: user });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -92,9 +99,12 @@ router.delete('/:songId', verifyFirebaseToken, async (req, res) => {
 });
 
 // Clear user's recently played list
-router.delete('/clear', verifyFirebaseToken, async (req, res) => {
+router.delete('/clear', async (req, res) => {
+  let { user } = req.query;
+  if (!user) return res.status(400).json({ error: 'User required' });
+
   try {
-    const user = await User.findById(req.user.uid);
+    user = await User.findOne({ email: user });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }

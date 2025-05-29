@@ -113,6 +113,14 @@ export default function MiniPlayer() {
 
   return (
     <div className="relative sticky bottom-0 left-0 z-50">
+      {/* Share Modal */}
+      <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          url={window.location.href}
+          title={currentSong?.title}
+        />
+        
       <Toaster />
       {/* Add to Playlist Modal */}
       {isAddToPlaylistModalOpen && (
@@ -264,14 +272,6 @@ export default function MiniPlayer() {
             </button>
           </div>
         </div>
-
-        {/* Share Modal */}
-        <ShareModal
-          isOpen={isShareModalOpen}
-          onClose={() => setIsShareModalOpen(false)}
-          url={window.location.href}
-          title={currentSong?.title}
-        />
 
         {/* Progress bar */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200">

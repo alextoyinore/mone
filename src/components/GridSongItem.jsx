@@ -40,7 +40,7 @@ export default function GridSongItem({
       </div>
       <div className="mt-2">
         <h3 className="font-light text-sm truncate text-gray-900 dark:text-white">{songTitle}</h3>
-        <p className="text-xs text-gray-500 truncate">{songArtist}</p>
+        <p className="text-xs text-gray-500 truncate">{song.artist.name}</p>
       </div>
     </div>
   );

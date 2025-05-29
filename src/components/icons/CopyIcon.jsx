@@ -14,7 +14,21 @@ export default function CopyIcon({ className = '', ...props }) {
       {...props}
     >
       <path
-        d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2M16 4v14M8 6v14M16 10h-2M16 14h-2M4 6h16M4 14h16M10 4v2M14 4v2"
+        d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16 6L8 14"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16 8L8 16"
         stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"

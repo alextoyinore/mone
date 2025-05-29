@@ -30,7 +30,7 @@ export default function ListSongItem({
       />
       <div className="flex-grow">
         <h3 className="font-medium capitalize text-sm">{song.title}</h3>
-        <p className="text-xs truncate">{song.artist}</p>
+        <p className="text-xs truncate">{song.artist.name}</p>
       </div>
 
       {isCurrentSong ? (

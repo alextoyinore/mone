@@ -2,10 +2,12 @@
 
 import React, { createContext, useState, useRef, useContext, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { useAuth } from './AuthContext';
 
 const AudioPlayerContext = createContext(null);
 
 export const AudioPlayerProvider = ({ children }) => {
+  const { user } = useAuth();
   // Store songs list for navigation
   const [songsList, setSongsList] = useState([]);
   
@@ -181,17 +183,18 @@ export const AudioPlayerProvider = ({ children }) => {
       setIsPlaying(true);
 
       // Add to recently played
-      const token = localStorage.getItem('userToken');
-      if (token) {
-        axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/recently-played/`,
-          { song: songData._id },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            }
+      if (user) {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/recently-played/?user=${user.email}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ song: song._id })
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to add to recently played');
           }
-        ).then(() => {
           console.log('Song added to recently played');
         })
         .catch(error => {

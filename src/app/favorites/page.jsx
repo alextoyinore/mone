@@ -17,7 +17,7 @@ export default function FavoritesPage() {
   const { playSong, setSongsForPlayback } = useAudioPlayer();
   const [favorites, setFavorites] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isGridView, setIsGridView] = useState(true);
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
 
   useEffect(() => {
     if (!user?.email) return;
@@ -60,11 +60,11 @@ export default function FavoritesPage() {
         </div>
 
         <button
-          onClick={() => setIsGridView(!isGridView)}
+          onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
           className="text-gray-600 hover:text-gray-800"
           title="Toggle view"
         >
-          {isGridView ? (
+          {viewMode === 'grid' ? (
             <ListIcon className="w-6 h-6" />
           ) : (
             <GridIcon className="w-6 h-6" />
@@ -81,8 +81,8 @@ export default function FavoritesPage() {
           <p className="text-gray-600">No favorites yet</p>
         </div>
       ) : (
-        <div className="space-y-4">
-          {isGridView ? (
+        <div className="">
+          {viewMode === 'grid' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {favorites.map((favorite) => (
                 <GridSongItem
@@ -96,7 +96,7 @@ export default function FavoritesPage() {
               ))}
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="">
               {favorites.map((favorite) => (
                 <ListSongItem
                   key={favorite.song._id}

@@ -9,7 +9,7 @@ import NotificationsPanel from './NotificationsPanel';
 import ThemeSwitcher from './ThemeSwitcher';
 import Image from 'next/image';
 import XitoIcon from '../assets/icondark.svg';
-import XitoIconBlue from '../assets/iconblue.svg';
+import XitoIconWhite from '../assets/iconwhite.svg';
 import HomeIcon from './icons/HomeIcon';
 import SearchIcon from './icons/SearchIcon';
 import NotificationIcon from './icons/NotificationIcon';
@@ -66,9 +66,9 @@ export default function SideNav() {
         <Link href="/">
           <div className='flex px-5 items-center cursor-pointer gap-0.5 mb-6 ml-2'>
             <Image src={XitoIcon} alt="Logo" className='block dark:hidden' width={28} height={28} />
-            <Image src={XitoIconBlue} alt="Logo" width={28} className='hidden dark:block' height={28} />
+            <Image src={XitoIconWhite} alt="Logo" width={28} className='hidden dark:block' height={28} />
             {isExpanded && (
-              <span className='text-xl font-bold text-black dark:text-blue-500'>itoplay</span>
+              <span className='text-xl font-bold text-black dark:text-white'>itoplay</span>
             )}
           </div>
         </Link>
