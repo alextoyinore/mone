@@ -37,10 +37,10 @@ export default function RootLayout({ children }) {
           <ThemeProvider>
             <AudioPlayerProvider>
               <SongOptionsProvider>
-                <main className="flex flex-col sm:max-w-full sm:min-w-full lg:max-w-[80%] lg:min-w-[80%] mx-auto min-h-screen relative">
+                <main className="flex flex-col mx-auto min-h-screen w-full relative">
                   <section className="flex w-full relative">
                     <SideNav />
-                    <div className="flex-grow relative overflow-y-auto transition-all duration-300">
+                    <div className="flex-grow relative overflow-y-auto transition-all duration-300 p-4">
                       {children}
                     </div>
                   </section>

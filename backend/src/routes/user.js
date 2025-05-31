@@ -317,17 +317,9 @@ router.delete('/:id/badges', async (req, res) => {
 
 // Get artist status
 router.get('/artist-status', verifyFirebaseToken, async (req, res) => {
-  console.log('Artist Status Request Details:', {
-    method: req.method,
-    path: req.path,
-    headers: req.headers,
-    user: req.user ? { email: req.user.email, uid: req.user.uid } : 'No user'
-  });
-
   try {
     // Validate user authentication
     if (!req.user || !req.user.email) {
-      console.error('Unauthorized access: Missing user or email');
       return res.status(401).json({ 
         error: 'Unauthorized',
         isArtist: false 
@@ -336,17 +328,11 @@ router.get('/artist-status', verifyFirebaseToken, async (req, res) => {
 
     // Find user with comprehensive error handling
     const user = await User.findOne({ email: req.user.email }).catch(err => {
-      console.error('Database query error:', {
-        message: err.message,
-        stack: err.stack,
-        email: req.user.email
-      });
       throw new Error(`Database query failed: ${err.message}`);
     });
 
     // Check if user exists
     if (!user) {
-      console.error('User not found:', req.user.email);
       return res.status(404).json({ 
         error: 'User not found',
         isArtist: false 
@@ -356,11 +342,6 @@ router.get('/artist-status', verifyFirebaseToken, async (req, res) => {
     // Determine artist status based on role
     const isArtist = user.role === 'artist' || !!user.artist;
 
-    console.log('Artist Status Response:', {
-      isArtist,
-      userRole: user.role,
-      hasArtistField: !!user.artist
-    });
 
     res.json({ 
       isArtist: isArtist,
@@ -371,11 +352,6 @@ router.get('/artist-status', verifyFirebaseToken, async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Comprehensive Error checking artist status:', {
-      message: error.message,
-      stack: error.stack,
-      requestUser: req.user ? req.user.email : 'No user'
-    });
     res.status(500).json({ 
       error: 'Failed to check artist status', 
       message: error.message,
@@ -387,25 +363,13 @@ router.get('/artist-status', verifyFirebaseToken, async (req, res) => {
 
 // Become an artist
 router.post('/become-artist', verifyFirebaseToken, async (req, res) => {
-  // console.log('Become Artist Request Details:', {
-  //   method: req.method,
-  //   path: req.path,
-  //   headers: req.headers,
-  //   user: req.user ? { email: req.user.email, uid: req.user.uid } : 'No user'
-  // });
 
   try {
     const user = await User.findOne({ email: req.user.email }).catch(err => {
-      console.error('Database query error in become-artist:', {
-        message: err.message,
-        stack: err.stack,
-        email: req.user.email
-      });
       throw new Error(`Database query failed: ${err.message}`);
     });
     
     if (user.artist) {
-      // console.log('User is already an artist:', req.user.email);
       return res.status(400).json({ 
         success: false, 
         message: 'You are already an artist' 
@@ -416,7 +380,7 @@ router.post('/become-artist', verifyFirebaseToken, async (req, res) => {
     const newArtist = new Artist({
       name: user.displayName || user.email.split('@')[0],
       user: user._id,
-      bio: 'New artist on itoplay',
+      bio: 'New artist on Xitoplay',
       profileImage: user.photoURL || ''
     });
 
@@ -432,7 +396,6 @@ router.post('/become-artist', verifyFirebaseToken, async (req, res) => {
       artist: newArtist 
     });
   } catch (error) {
-    console.error('Error becoming artist:', error);
     res.status(500).json({ 
       success: false, 
       message: 'Failed to become an artist' 

@@ -73,7 +73,7 @@ export default function ExplorePage() {
   );
 
   return (
-    <div className="min-h-screen p-8 bg-white dark:bg-black text-gray-900 dark:text-white">
+    <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white">
       <h1 className="text-3xl font-bold mb-6">Explore Public Playlists</h1>
       
       <div className="mb-6 flex space-x-4">

@@ -61,7 +61,7 @@ export default function SideNav() {
 
   return (
     <>
-      <nav className={`hidden md:block sticky relative left-0 overflow-y-auto py-5 ${isExpanded ? 'w-60' : 'w-20'} bg-gray-100 dark:bg-black border-r border-gray-200 dark:border-gray-800 ${ currentSong ? 'top-0 max-h-[calc(100vh-5em)]' : 'top-0 max-h-screen' } transition-all duration-300 ease-in-out z-40`}>
+      <nav className={`hidden md:block sticky relative left-0 overflow-y-auto py-5 ${isExpanded ? 'min-w-60' : 'min-w-20'} bg-gray-100 dark:bg-black border-r border-gray-200 dark:border-gray-800 ${ currentSong ? 'top-0 max-h-[calc(100vh-5em)]' : 'top-0 max-h-screen' } transition-all duration-300 ease-in-out z-40`}>
         {/* Logo */}
         <Link href="/">
           <div className='flex px-5 items-center cursor-pointer gap-0.5 mb-6 ml-2'>

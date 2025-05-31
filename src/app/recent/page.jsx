@@ -43,7 +43,6 @@ export default function RecentlyPlayedPage() {
         }
 
         const data = await response.json();
-        console.log('data: ', data);
         
         setRecentlyPlayed(data);
         setLoading(false);
@@ -90,7 +89,7 @@ export default function RecentlyPlayedPage() {
 
   if (!recentlyPlayed || recentlyPlayed.length === 0) {
     return (
-      <div className="bg-white dark:bg-black min-h-screen p-4">
+      <div className="bg-white dark:bg-black min-h-screen">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Recently Played</h1>
           <div className="flex items-center space-x-2">
@@ -112,7 +111,7 @@ export default function RecentlyPlayedPage() {
   }
 
   return (
-      <div className="container mx-auto px-4 py-8 min-h-screen">
+      <div className="container mx-auto py-8 min-h-screen">
         <div className="flex justify-between items-center mb-6">
           <div className="flex gap-4 items-center">
             <h1 className="text-3xl font-bold">Recently Played</h1>
@@ -146,7 +145,7 @@ export default function RecentlyPlayedPage() {
         ) : (
           <div className="">
             {viewMode === 'grid' ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
                 {recentlyPlayed.map((song) => (
                   <GridSongItem
                     key={song._id}

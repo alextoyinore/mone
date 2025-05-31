@@ -1,4 +1,6 @@
 const Artist = require('../models/Artist');
+const Song = require('../models/Song');
+const User = require('../models/User');
 
 const cloudinary = require('../config/cloudinary');
 
@@ -21,7 +23,6 @@ exports.createArtist = async (req, res) => {
     }
     const artist = await Artist.create({ ...req.body, avatar: avatarUrl });
     // Update the user to reference this artist
-    const User = require('../models/User');
     await User.findByIdAndUpdate(artist.user, { artist: artist._id });
     res.status(201).json(artist);
   } catch (err) {

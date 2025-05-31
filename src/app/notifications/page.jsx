@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import Link from 'next/link';
 import Image from 'next/image';
 import AuthRequired from '../../components/AuthRequired';
 
@@ -68,7 +67,7 @@ export default function NotificationsPage() {
   }
 
   return (
-    <div className="min-h-screen p-8 bg-white dark:bg-black text-gray-900 dark:text-white">
+    <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Notifications</h1>
         

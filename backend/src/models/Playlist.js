@@ -19,7 +19,7 @@ const getRandomCover = () => {
 const PlaylistSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, default: "" },
-  cover: { type: String, default: getRandomCover }, // image url
+  cover: { type: String }, // image url
   isPublic: { type: Boolean, default: false },
   slug: { type: String, unique: true, sparse: true }, // for public sharing
   user: { type: String, required: true }, // owner email or id

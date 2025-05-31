@@ -34,6 +34,7 @@ app.use('/api/message', require('./routes/message'));
 app.use('/api/explore', require('./routes/explore'));
 app.use('/api/recently-played', require('./routes/recently-played'));
 app.use('/api/comments', require('./routes/comment'));
+app.use('/api/search', require('./routes/search'));
 
 
 // Example route (to be replaced with real routes)
@@ -41,12 +42,17 @@ app.get('/', (req, res) => {
   res.json({ message: 'API running' });
 });
 
+const clientOptions = {
+  serverApi: {
+      version: '1',
+      strict: true,
+      deprecationErrors: true
+  },
+  dbName: 'mone'
+}
+
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  dbName: process.env.DB_NAME
-})
+mongoose.connect(process.env.MONGODB_URI, clientOptions)
 .then(() => {
   console.log('MongoDB connected');
 })

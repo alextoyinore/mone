@@ -258,8 +258,8 @@ export default function UploadPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-gray-50 dark:bg-black">
-      <div className="w-full max-md:w-[90%] p-4">
+    <div className="min-h-screen flex items-center justify-center px-4 lg:pr-0 py-8 bg-gray-50 dark:bg-black">
+      <div className="w-full max-md:w-[90%]">
         <div className='flex justify-between items-start'>
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Upload Song</h1>

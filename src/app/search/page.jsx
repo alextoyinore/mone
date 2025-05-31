@@ -2,27 +2,42 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
 import LoadingSpinner from '@/components/loading/LoadingSpinner';
+import GridSongItem from '@/components/GridSongItem';
+import ListSongItem from '@/components/ListSongItem';
+import GridIcon from '@/components/icons/GridIcon';
+import ListIcon from '@/components/icons/ListIcon';
+import SearchIcon from '@/components/icons/SearchIcon';
+import { useAudioPlayer } from '@/contexts/AudioPlayerContext';
+import PlaylistGridItem from '@/components/PlaylistGridItem';
+import PlaylistListItem from '@/components/PlaylistListItem';
+import GridArtistItem from '@/components/GridArtistItem';
+// import { useFollow } from '@/contexts/FollowContext';
+
 
 export default function SearchPage() {
   const { user, token } = useAuth();
+  // const { followArtist, unfollowArtist, isFollowing } = useFollow();
+  const [viewMode, setViewMode] = useState('grid');
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
-  const [activeTab, setActiveTab] = useState('tracks');
+  const [activeTab, setActiveTab] = useState('songs');
+  const {setSongsForPlayback, playSong} = useAudioPlayer();
   const [searchResults, setSearchResults] = useState({
-    tracks: [],
+    songs: [],
     artists: [],
-    albums: [],
     playlists: []
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const handleSearch = async (e) => {
-    e.preventDefault();
+    if(e){
+      e.preventDefault();
+    }
     
     if (!searchQuery.trim()) return;
 
@@ -30,16 +45,11 @@ export default function SearchPage() {
     setError(null);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/search`, {
-        method: 'POST',
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/search?q=${searchQuery}`, {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({
-          query: searchQuery,
-          types: ['tracks', 'artists', 'albums', 'playlists']
-        })
       });
 
       if (!response.ok) {
@@ -47,20 +57,42 @@ export default function SearchPage() {
       }
 
       const data = await response.json();
+      console.log(data);
       setSearchResults(data);
     } catch (err) {
-      console.error('Search error:', err);
-      setError('Failed to perform search. Please try again.');
+      setError('Failed to perform search. Please try again.', err.message);
       setSearchResults({
-        tracks: [],
+        songs: [],
         artists: [],
-        albums: [],
         playlists: []
       });
     } finally {
       setIsLoading(false);
     }
   };
+
+  const handlePlayAll = () => {
+    if (searchResults.songs.length > 0) {
+      setSongsForPlayback(searchResults.songs);
+      playSong(searchResults.songs[0]);
+    }
+  };
+
+  const handlePlayAllPlaylists = () => {
+    if (searchResults.playlists.length > 0) {
+      const songs = searchResults.playlists.map((playlist) => playlist.songs);
+      setSongsForPlayback(songs.flat());
+      playSong(songs.flat()[0]);
+    }
+  };
+
+  useEffect(() => {
+    const q = searchParams.get('q');
+    if (q) {
+      setSearchQuery(q);
+      handleSearch();
+    }
+  }, [searchParams]);
 
   if (!user) {
     return (
@@ -79,36 +111,61 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="min-h-screen p-8 bg-white dark:bg-black text-gray-900 dark:text-white">
-      <h1 className="text-3xl font-bold mb-6">Search</h1>
+    <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white">
       
-      <form onSubmit={handleSearch} className="mb-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Search</h1>
+
+      <div className="">
+        {
+          viewMode === 'list' ? (
+            <button
+            onClick={() => setViewMode('grid')}
+            className={`px-4 py-2 rounded-lg transition capitalize`}
+          >
+            <GridIcon className="w-5 h-5" />
+          </button>
+          ) : (
+            <button
+            onClick={() => setViewMode('list')}
+            className={`px-4 py-2 rounded-lg transition capitalize`}
+          >
+            <ListIcon className="w-5 h-5" />
+          </button>
+          )
+        }
+        </div> 
+      </div> 
+       
+      
+      <form className="mb-6">
         <div className="relative">
           <input 
             type="text" 
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {setSearchQuery(e.target.value) ; handleSearch(e) }}
             placeholder="Search songs, artists, albums..."
-            className="w-full px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-900 dark:text-white"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 dark:bg-gray-900 dark:text-white"
           />
           <button 
             type="submit" 
             disabled={isLoading}
+            onClick={(e) => {e.preventDefault(); handleSearch(e)}}
             className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-300 disabled:opacity-50"
           >
-            {isLoading ? <LoadingSpinner className="h-5 w-5" /> : '🔍'}
+            {isLoading ? <LoadingSpinner className="h-5 w-5" /> : <SearchIcon className="h-5 w-5" />}
           </button>
         </div>
       </form>
 
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative mb-4" role="alert">
           <span className="block sm:inline">{error}</span>
         </div>
       )}
 
       <div className="mb-6 flex space-x-4">
-        {(['tracks', 'artists', 'albums', 'playlists']).map((tab) => (
+        {(['songs', 'artists', 'playlists']).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -136,107 +193,83 @@ export default function SearchPage() {
           <p>Enter a search query to find songs, artists, albums, and playlists</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {activeTab === 'tracks' && searchResults.tracks.map((track) => (
-            <div 
-              key={track.id} 
-              className="flex items-center bg-gray-100 dark:bg-gray-900 p-4 rounded-lg shadow-md hover:shadow-lg transition"
-            >
-              <Image 
-                src={track.coverImage || 'https://via.placeholder.com/64'} 
-                alt={track.title} 
-                width={64} 
-                height={64} 
-                className="w-16 h-16 object-cover rounded-md mr-4" 
-              />
+        <>
+        <div className='mb-6 text-sm text-gray-600 dark:text-gray-400'>
+            {
+              activeTab === 'songs' && <div className='flex gap-3'> {searchResults.songs.length} songs found for "{searchQuery}" <span className="text-blue-600 cursor-pointer" 
+              onClick={() => handlePlayAll()} >Play All</span>
+              <span className="text-gray-600 cursor-pointer"
+              onClick={() => {setSearchQuery(''); setSearchResults({songs: [], artists: [], playlists: []}); setActiveTab('songs')}}>Clear</span></div>
+            }
               
-              <div className="flex-grow">
-                <h2 className="text-lg font-semibold">{track.title}</h2>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {track.artist} • {track.album}
-                </p>
-              </div>
-              
-              <span className="text-gray-500 dark:text-gray-400">{track.duration}</span>
-            </div>
-          ))}
+            {
+              activeTab === 'artists' && <div className='flex gap-3'> {searchResults.artists.length} artists found for "{searchQuery}" <span className="text-blue-600 cursor-pointer" 
+              onClick={() => setArtistsForPlayback(searchResults.artists)} >Play All</span>
+              <span className="text-gray-600 cursor-pointer"
+              onClick={() => {setSearchQuery(''); setSearchResults({songs: [], artists: [], playlists: []}); setActiveTab('artists')}}>Clear</span></div>
+            }
+
+            {
+              activeTab === 'playlists' && <div className='flex gap-3'> {searchResults.playlists.length} playlists found for "{searchQuery}" <span className="text-blue-600 cursor-pointer" 
+              onClick={() => handlePlayAllPlaylists()} >Play All</span>
+              <span className="text-gray-600 cursor-pointer"
+              onClick={() => {setSearchQuery(''); setSearchResults({songs: [], artists: [], playlists: []}); setActiveTab('playlists')}}>Clear</span></div>
+            }
+            
+          </div>
+        <div className={`${viewMode === 'grid' ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5' : 'flex flex-col'}`}>
+          
+          {activeTab === 'songs' && searchResults.songs.map((song) =>   
+              viewMode === 'grid' ? (
+                  <GridSongItem
+                  key={song._id}
+                  song={song}
+                  songTitle={song.title}
+                  songArtist={song.artist.name}
+                  songCoverArt={song.coverArt || 'https://via.placeholder.com/64'}
+                  playSong={() => playSong(song)}
+                />
+                ) : (
+                  <ListSongItem
+                  key={song._id}
+                  song={song}
+                  songTitle={song.title}
+                  songArtist={song.artist.name}
+                  songCoverArt={song.coverArt || 'https://via.placeholder.com/64'}
+                  playSong={() => playSong(song)}
+                />
+                )
+          )}
 
           {activeTab === 'artists' && searchResults.artists.map((artist) => (
-            <div 
-              key={artist.id} 
-              className="bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
-            >
-              <div className="relative h-48 w-full">
-                <Image 
-                  src={artist.coverImage || 'https://placehold.co/'} 
-                  alt={artist.name} 
-                  layout="fill" 
-                  objectCover="cover" 
-                  className="absolute inset-0"
-                />
-              </div>
-              
-              <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2">{artist.name}</h2>
-                <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                  <span>{artist.genre}</span>
-                  <span>{artist.followers?.toLocaleString() || 0} Followers</span>
-                </div>
-              </div>
-            </div>
-          ))}
-
-          {activeTab === 'albums' && searchResults.albums.map((album) => (
-            <div 
-              key={album.id} 
-              className="bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
-            >
-              <div className="relative h-48 w-full">
-                <Image 
-                  src={album.coverImage || 'https://placehold.co/'} 
-                  alt={album.title} 
-                  layout="fill" 
-                  objectCover="cover" 
-                  className="absolute inset-0"
-                />
-              </div>
-              
-              <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2">{album.title}</h2>
-                <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                  <span>{album.artist}</span>
-                  <span>{album.year} • {album.tracks} Tracks</span>
-                </div>
-              </div>
-            </div>
+            <GridArtistItem
+              key={artist._id}
+              artist={artist}
+              playSong={() => playSong(artist.songs[0])}
+              followArtist={(artistId) => handleFollowArtist(artistId)}
+              isFollowing={user?.following?.includes(artist._id)}
+            />
           ))}
 
           {activeTab === 'playlists' && searchResults.playlists.map((playlist) => (
-            <div 
-              key={playlist.id} 
-              className="bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
-            >
-              <div className="relative h-48 w-full">
-                <Image 
-                  src={playlist.coverImage || 'https://placehold.co/'} 
-                  alt={playlist.title} 
-                  layout="fill" 
-                  objectCover="cover" 
-                  className="absolute inset-0"
-                />
-              </div>
-              
-              <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2">{playlist.title}</h2>
-                <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                  <span>Created by {playlist.creator}</span>
-                  <span>{playlist.tracks} Tracks</span>
-                </div>
-              </div>
-            </div>
+            viewMode === 'grid' ? (
+              <PlaylistGridItem
+              key={playlist._id}
+              playlist={playlist}
+              handleDeletePlaylist={() => {}}
+            />
+            ) : (
+              <PlaylistListItem
+              key={playlist._id}
+              playlist={playlist}
+              handleDeletePlaylist={() => {}}
+            />
+            )
           ))}
         </div>
+        </>
       )}
     </div>
+    
   );
 }

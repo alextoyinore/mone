@@ -113,6 +113,9 @@ export default function MiniPlayer() {
 
   return (
     <div className="relative sticky bottom-0 left-0 z-50">
+
+      <Toaster />
+      {/* Add to Playlist Modal */}
       {/* Share Modal */}
       <ShareModal
           isOpen={isShareModalOpen}
@@ -120,9 +123,7 @@ export default function MiniPlayer() {
           url={window.location.href}
           title={currentSong?.title}
         />
-        
-      <Toaster />
-      {/* Add to Playlist Modal */}
+
       {isAddToPlaylistModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-900 p-6 rounded-lg w-96">

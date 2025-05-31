@@ -1,14 +1,12 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '../../contexts/AuthContext';
 import { useAudioPlayer } from '../../contexts/AudioPlayerContext';
 import toast from 'react-hot-toast';
 import GridIcon from '@/components/icons/GridIcon';
 import ListIcon from '@/components/icons/ListIcon';
-import PlayIcon from '@/components/icons/PlayIcon';
 import GridSongItem from '@/components/GridSongItem';
 import ListSongItem from '@/components/ListSongItem';
 import LoadingSpinner from '@/components/loading/LoadingSpinner';
@@ -16,7 +14,7 @@ import LoadingSpinner from '@/components/loading/LoadingSpinner';
 
 export default function SongsPage() {
   const { user, getToken } = useAuth();
-  const { playSong, currentSong, isPlaying, setSongsForPlayback } = useAudioPlayer();
+  const { playSong, setSongsForPlayback } = useAudioPlayer();
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -138,7 +136,7 @@ export default function SongsPage() {
 
   if (!songs || songs.length === 0) {
     return (
-      <div className="bg-white dark:bg-black min-h-screen p-4">
+      <div className="bg-white dark:bg-black min-h-screen">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Songs</h1>
           <div className="flex items-center space-x-2">
@@ -229,7 +227,7 @@ export default function SongsPage() {
   }
 
   return (
-    <div className="mx-auto p-4">
+    <div className="mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Songs</h1>
         <button

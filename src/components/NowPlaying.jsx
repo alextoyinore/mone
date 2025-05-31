@@ -83,7 +83,7 @@ export default function NowPlaying({ isOpen, onClose }) {
             </div>
 
             {/* Content container */}
-            <div className="relative flex h-full">
+            <div className="relative flex gap-8 h-full">
               {/* Left side - Song info and controls */}
               <div className="w-full lg:w-1/2 p-12">
                 <div className="flex flex-col h-full justify-between">
@@ -143,7 +143,7 @@ export default function NowPlaying({ isOpen, onClose }) {
                       />
                     </div>
                   {/* Action buttons */}
-                  <div className="flex items-center space-x-4">
+                  {/* <div className="flex items-center space-x-4">
                     <button className="text-gray-400 hover:text-white transition opacity-50 hover:opacity-100">
                       <FavoriteIcon className="w-8 h-8 cursor-pointer" />
                     </button>
@@ -153,7 +153,7 @@ export default function NowPlaying({ isOpen, onClose }) {
                     <button className="text-gray-400 hover:text-white transition opacity-50 hover:opacity-100">
                       <AddToPlaylistIcon className="w-8 h-8 cursor-pointer" />
                     </button>
-                  </div>
+                  </div> */}
                     
                   </div>
 
@@ -185,7 +185,7 @@ export default function NowPlaying({ isOpen, onClose }) {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center text-gray-400 py-8">
+                  <div className="text-gray-400 py-8">
                     <p>No more songs in queue</p>
                   </div>
                 )}

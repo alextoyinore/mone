@@ -263,7 +263,7 @@ export default function SongDetailPage() {
       </div>
 
       {/* Song Details Container */}
-      <div className="container mx-auto px-4 py-8 relative z-10">
+      <div className="container mx-auto py-8 relative z-10">
         
         {/* Song Description */}
         <div className="">

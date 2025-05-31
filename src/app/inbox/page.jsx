@@ -74,7 +74,7 @@ export default function InboxPage() {
 
 
   return (
-    <div className="min-h-screen p-8 bg-white dark:bg-black text-gray-900 dark:text-white flex">
+    <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white flex">
       {/* Conversations List */}
       <div className="w-1/3 border-r border-gray-200 dark:border-gray-800 pr-4">
         <h1 className="text-3xl font-bold mb-6">Messages</h1>

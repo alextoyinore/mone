@@ -3,17 +3,17 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import Image from 'next/image';
-import Link from 'next/link';
 import toast from 'react-hot-toast';
 import AuthRequired from '../../components/AuthRequired';
 import Cookies from 'js-cookie';
+import defaultImage from '@/assets/default-image-black.svg';
 
 export default function ProfilePage() {
   const { user, updateProfile, logout, getToken } = useAuth();
   const [displayName, setDisplayName] = useState(user?.displayName);
   const [email, setEmail] = useState(user?.email);
   const [profileImage, setProfileImage] = useState(() => {
-    const originalImage = user?.photoURL || 'https://placehold.co/150x150';
+    const originalImage = user?.photoURL || defaultImage;
     
     // Enhance Google profile image resolution
     if (originalImage.includes('googleusercontent.com')) {
@@ -154,7 +154,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen dark:from-gray-900 dark:to-gray-800">
-      <div className="px-6 py-6">
+      <div className="">
         <div className="dark:bg-gray-900">
           
           <div className="flex flex-col gap-4">

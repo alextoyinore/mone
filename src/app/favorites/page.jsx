@@ -49,7 +49,7 @@ export default function FavoritesPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 min-h-screen">
+    <div className="container mx-auto py-8 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <div className="flex gap-4 items-center">
           <h1 className="text-3xl font-bold">Favorites</h1>
@@ -83,7 +83,7 @@ export default function FavoritesPage() {
       ) : (
         <div className="">
           {viewMode === 'grid' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
               {favorites.map((favorite) => (
                 <GridSongItem
                   key={favorite.song._id}
