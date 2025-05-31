@@ -258,7 +258,7 @@ export default function UploadPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 lg:pr-0 py-8 bg-gray-50 dark:bg-black">
+    <div className="min-h-screen flex items-center justify-center py-8">
       <div className="w-full max-md:w-[90%]">
         <div className='flex justify-between items-start'>
         <div className="mb-8">
@@ -283,7 +283,7 @@ export default function UploadPage() {
         
         
         <form className="flex gap-6">
-          <div>
+          <div className='w-1/2'>
             <div className='space-y-6'>
               <label className="block mb-2 text-sm font-medium">Song Title *</label>
               <input 

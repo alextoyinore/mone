@@ -20,9 +20,8 @@ export default function GridArtistItem({
         <Image 
           src={artist.avatar || defaultImage}
           alt={artist.name} 
-          width={300} 
-          height={300} 
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          fill
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
           onClick={() => playSong(artist.songs[0])}
         />
         

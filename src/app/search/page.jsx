@@ -121,14 +121,14 @@ export default function SearchPage() {
           viewMode === 'list' ? (
             <button
             onClick={() => setViewMode('grid')}
-            className={`px-4 py-2 rounded-lg transition capitalize`}
+            className={`py-2 rounded-lg transition capitalize`}
           >
             <GridIcon className="w-5 h-5" />
           </button>
           ) : (
             <button
             onClick={() => setViewMode('list')}
-            className={`px-4 py-2 rounded-lg transition capitalize`}
+            className={`py-2 rounded-lg transition capitalize`}
           >
             <ListIcon className="w-5 h-5" />
           </button>
@@ -217,7 +217,7 @@ export default function SearchPage() {
             }
             
           </div>
-        <div className={`${viewMode === 'grid' ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5' : 'flex flex-col'}`}>
+        <div className={`${viewMode === 'grid' ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5' : 'flex flex-col'}`}>
           
           {activeTab === 'songs' && searchResults.songs.map((song) =>   
               viewMode === 'grid' ? (

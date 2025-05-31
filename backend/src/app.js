@@ -28,7 +28,7 @@ app.use('/api/analytics', require('./routes/analytics'));
 app.use('/api/analytics-admin', require('./routes/analyticsAdmin'));
 app.use('/api/feed', require('./routes/feed'));
 app.use('/api/trending', require('./routes/trending'));
-app.use('/api/users', require('./routes/user'));
+app.use('/api/friends', require('./routes/friends'));
 app.use('/api/notifications', require('./routes/notification'));
 app.use('/api/message', require('./routes/message'));
 app.use('/api/explore', require('./routes/explore'));

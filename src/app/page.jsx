@@ -8,11 +8,11 @@ export default function Home() {
   const { theme } = useTheme();
 
   return (
-    <div className="min-h-screen p-4 bg-white dark:bg-black text-gray-900 dark:text-white">
+    <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white">
           <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
       
       {user ? (
-        <div className="flex gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="bg-gray-100 dark:bg-gray-900 p-6 rounded-lg">
             <h2 className="text-xl font-semibold mb-4">Welcome, {user.displayName || user.email}</h2>
             <p className="text-gray-600 dark:text-gray-300">Your music journey starts here.</p>

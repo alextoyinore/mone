@@ -13,13 +13,14 @@ export default function ProfilePage() {
   const [displayName, setDisplayName] = useState(user?.displayName);
   const [email, setEmail] = useState(user?.email);
   const [profileImage, setProfileImage] = useState(() => {
+    
     const originalImage = user?.photoURL || defaultImage;
     
-    // Enhance Google profile image resolution
-    if (originalImage.includes('googleusercontent.com')) {
-      // Replace with higher resolution image
-      return originalImage.replace('s96-c', 's400-c');
-    }
+    // // Enhance Google profile image resolution
+    // if (originalImage.includes('googleusercontent.com')) {
+    //   // Replace with higher resolution image
+    //   return originalImage.replace('s96-c', 's400-c');
+    // }
     
     return originalImage;
   });
@@ -60,7 +61,7 @@ export default function ProfilePage() {
         });
 
         const data = await response.json();
-        console.log(data);
+        console.log('artist status:', data);
         
         setIsArtist(data.isArtist);
       } catch (error) {
@@ -163,7 +164,7 @@ export default function ProfilePage() {
                 <div className="relative w-full h-full rounded-full overflow-hidden">
                   <Image 
                     src={profileImage} 
-                    alt="Profile" 
+                    alt={displayName} 
                     fill 
                     className="object-cover"
                     unoptimized

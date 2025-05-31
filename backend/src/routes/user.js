@@ -318,6 +318,7 @@ router.delete('/:id/badges', async (req, res) => {
 // Get artist status
 router.get('/artist-status', verifyFirebaseToken, async (req, res) => {
   try {
+    console.log('req.user:', req.user);
     // Validate user authentication
     if (!req.user || !req.user.email) {
       return res.status(401).json({ 
@@ -331,6 +332,8 @@ router.get('/artist-status', verifyFirebaseToken, async (req, res) => {
       throw new Error(`Database query failed: ${err.message}`);
     });
 
+    console.log('user:', user);
+
     // Check if user exists
     if (!user) {
       return res.status(404).json({ 
@@ -340,16 +343,11 @@ router.get('/artist-status', verifyFirebaseToken, async (req, res) => {
     }
 
     // Determine artist status based on role
-    const isArtist = user.role === 'artist' || !!user.artist;
-
+    const isArtist = user.artist ? true : false;
 
     res.json({ 
       isArtist: isArtist,
-      artist: user.artist || null,
-      userDetails: {
-        email: user.email,
-        role: user.role
-      }
+      user: user
     });
   } catch (error) {
     res.status(500).json({ 

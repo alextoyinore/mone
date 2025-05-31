@@ -41,7 +41,7 @@ export function AuthProvider({ children }) {
         uid: userData?.uid,
         email: userData?.email,
         displayName: userData?.displayName,
-        photoURL: userData?.photoURL
+        photoURL: userData?.photoURL,
       }));
 
       document.cookie = `xito_auth=${encodedUserData}; ${cookieOptions.join('; ')}`;
@@ -84,9 +84,9 @@ export function AuthProvider({ children }) {
           uid: currentUser.uid,
           email: currentUser.email,
           displayName: currentUser.displayName,
-          photoURL: currentUser.photoURL
+          photoURL: currentUser.photoURL,
         };
-        
+                
         saveUserData(userData);
       } else {
         // Clear user data when logged out

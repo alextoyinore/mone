@@ -138,7 +138,13 @@ export default function SongsPage() {
     return (
       <div className="bg-white dark:bg-black min-h-screen">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Songs</h1>
+          <div className="flex items-center space-x-2 w-1/3">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Songs</h1>
+            <div className="flex items-center space-x-2">
+              <span>{songs.length} songs</span>
+              <span onClick={() => {setSongsForPlayback(songs); playSong(songs[0])}} className="text-blue-500 cursor-pointer">Play All</span>
+            </div>
+          </div>
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
@@ -155,7 +161,7 @@ export default function SongsPage() {
 
         
         {viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             {songs.map((song) => {
               const songTitle = parseSongValue(song.name || song.title, 'Unknown Song');
               const songArtist = parseSongValue(song.artist, 'Unknown Artist');
@@ -244,7 +250,7 @@ export default function SongsPage() {
 
       {/* Grid View */}
       {viewMode === 'grid' ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-5">
           {songs.map((song) => {
               const songTitle = parseSongValue(song.name || song.title, 'Unknown Song');
               const songArtist = parseSongValue(song.artist, 'Unknown Artist');

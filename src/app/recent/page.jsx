@@ -1,21 +1,18 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useAuth } from '../../contexts/AuthContext';
-import { useAudioPlayer } from '../../contexts/AudioPlayerContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useAudioPlayer } from '@/contexts/AudioPlayerContext';
 import toast from 'react-hot-toast';
 import GridIcon from '@/components/icons/GridIcon';
 import ListIcon from '@/components/icons/ListIcon';
-import PlayIcon from '@/components/icons/PlayIcon';
 import GridSongItem from '@/components/GridSongItem';
 import ListSongItem from '@/components/ListSongItem';
 import LoadingSpinner from '@/components/loading/LoadingSpinner';
 
 export default function RecentlyPlayedPage() {
   const { user } = useAuth();
-  const { playSong, currentSong, isPlaying, setSongsForPlayback } = useAudioPlayer();
+  const { playSong, setSongsForPlayback } = useAudioPlayer();
   const [recentlyPlayed, setRecentlyPlayed] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -87,6 +84,10 @@ export default function RecentlyPlayedPage() {
     );
   }
 
+  if(!user){
+    return <AuthRequired message="You must be logged in to view your recently played songs." />;
+  }
+
   if (!recentlyPlayed || recentlyPlayed.length === 0) {
     return (
       <div className="bg-white dark:bg-black min-h-screen">
@@ -145,7 +146,7 @@ export default function RecentlyPlayedPage() {
         ) : (
           <div className="">
             {viewMode === 'grid' ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                 {recentlyPlayed.map((song) => (
                   <GridSongItem
                     key={song._id}

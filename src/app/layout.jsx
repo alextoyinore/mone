@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import { DM_Sans } from 'next/font/google';
 import { ThemeProvider } from '@/contexts/ThemeContext';
@@ -8,6 +8,7 @@ import { SongOptionsProvider } from '@/contexts/SongOptionsContext';
 import './globals.css';
 import SideNav from '@/components/SideNav';
 import MiniPlayer from '@/components/MiniPlayer';
+import RightNav from '@/components/RightNav';
 
 const dmSans = DM_Sans({ 
   subsets: ['latin'], 
@@ -15,13 +16,13 @@ const dmSans = DM_Sans({
 });
 
 
-// export const metadata = {
-//   title: 'Xitoplay - Music Streaming',
-//   description: 'Your personal music streaming platform',
-//   icons: {
-//     icon: '/icondark.svg',
-//   },
-// };
+export const metadata = {
+  title: 'Xitoplay - Music Streaming',
+  description: 'Your personal music streaming platform',
+  icons: {
+    icon: '/icondark.svg',
+  },
+};
 
 export default function RootLayout({ children }) {
 
@@ -43,6 +44,7 @@ export default function RootLayout({ children }) {
                     <div className="flex-grow relative overflow-y-auto transition-all duration-300 p-4">
                       {children}
                     </div>
+                    <RightNav />
                   </section>
                   <MiniPlayer className="sticky bottom-0 left-0 z-50" />
                 </main>

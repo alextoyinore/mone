@@ -172,7 +172,7 @@ export default function PlaylistsPage() {
         </div>
       </div>
 
-      <div className={viewMode === 'grid' ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5' : 'flex flex-col'}>
+      <div className={viewMode === 'grid' ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5' : 'flex flex-col'}>
         {playlists.length === 0 ? (
           <div className="col-span-full text-gray-500 dark:text-gray-400">
             No playlists yet. Create your first playlist!

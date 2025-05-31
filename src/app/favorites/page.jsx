@@ -83,7 +83,7 @@ export default function FavoritesPage() {
       ) : (
         <div className="">
           {viewMode === 'grid' ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {favorites.map((favorite) => (
                 <GridSongItem
                   key={favorite.song._id}

@@ -13,6 +13,7 @@ import GridIcon from '@/components/icons/GridIcon';
 import ListIcon from '@/components/icons/ListIcon';
 import PlayIcon from '@/components/icons/PlayIcon';
 import PauseIcon from '@/components/icons/PauseIcon';
+import defaultImage from '@/assets/default-image-black.svg';
 
 
 export default function PlaylistDetailPage() {
@@ -72,7 +73,7 @@ export default function PlaylistDetailPage() {
       <div className="relative mb-6">
         <div className="relative h-[40vh] md:h-[30vh] lg:h-[40vh] w-full overflow-hidden">
           <Image
-            src={playlist.cover || 'https://placehold.co/400x400'}
+            src={playlist.cover || defaultImage}
             alt={playlist.name}
             fill
             className="object-cover"
