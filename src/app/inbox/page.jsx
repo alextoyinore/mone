@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -45,6 +46,86 @@ const getConversationId = (user1, user2) => {
 const getOtherUser = (conversation, currentUser) => {
   return conversation.users.find(userId => userId !== currentUser?.uid);
 };
+
+// Create a memoized version of the ConversationItem
+const MemoizedConversationItem = React.memo(({ conv, user, setSelectedConversation, selectedConversation }) => {
+  const [otherUserData, setOtherUserData] = useState(null);
+
+  // Fetch user data only when the conv or user changes
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const otherUserId = getOtherUser(conv, user);
+      const otherUserDocRef = doc(db, 'users', otherUserId);
+      const docSnap = await getDoc(otherUserDocRef);
+      if (docSnap.exists()) {
+        setOtherUserData(docSnap.data());
+      }
+    };
+    fetchUserData();
+  }, [conv, user]); // Add conv and user as dependencies
+
+
+  const handleSelectConversation = async () => {
+    const otherUserId = getOtherUser(conv, user);
+    const otherUserDocRef = doc(db, 'users', otherUserId);
+    const docSnap = await getDoc(otherUserDocRef);
+    if (docSnap.exists()) {
+      setSelectedConversation({
+        ...conv,
+        otherUser: docSnap.data()
+      });
+    }
+  };
+
+
+  const lastMessage = conv.lastMessage || {
+    text: 'No messages yet',
+    timestamp: null
+  };
+
+  if (!otherUserData) {
+    return <div className='text-gray-500 dark:text-gray-400 text-center'>Loading...</div>;
+  }
+
+  return (
+    <button
+      key={conv.id}
+      onClick={handleSelectConversation}
+      className={`w-full flex items-center p-3 gap-2 cursor-pointer rounded-lg text-left hover:bg-gray-50 dark:hover:bg-gray-900 transition ${
+        selectedConversation?.id === conv.id 
+          ? 'bg-gray-100 dark:bg-gray-900' 
+          : ''
+      }`}
+    >
+      {
+        otherUserData.photoURL ? (
+          <Image 
+            src={otherUserData.photoURL}
+            alt={otherUserData.displayName}
+            width={48}
+            height={48}
+            className="rounded-full w-12 h-12 flex-shrink-0"
+          />
+        ) : (
+          <div className="rounded-full flex-shrink-0 bg-gray-200 dark:bg-gray-800 w-12 h-12 flex items-center justify-center">
+            {otherUserData.displayName[0]}
+          </div>
+        )
+      }
+      <div className="flex-grow">
+        <div className="flex items-center justify-between">
+          <h3 className="font-semibold text-sm">{otherUserData.displayName}</h3>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            {formatTime(lastMessage.timestamp)}
+          </p>
+        </div>
+        <p className="text-xs font-semibold text-blue-500 dark:text-blue-400">
+          {lastMessage.text}
+        </p>
+      </div>
+    </button>
+  );
+});
 
 
 export default function InboxPage() {
@@ -92,70 +173,7 @@ export default function InboxPage() {
   // Load users for new conversation search
   const [searchedUsers, setSearchedUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
-
-  const ConversationItem = ({ conv, user }) => {
-    const [otherUserData, setOtherUserData] = useState(null);
   
-    useEffect(() => {
-      const fetchUserData = async () => {
-        const otherUserId = getOtherUser(conv, user);
-        const otherUserDocRef = doc(db, 'users', otherUserId);
-        const docSnap = await getDoc(otherUserDocRef);
-        if (docSnap.exists()) {
-          setOtherUserData(docSnap.data());
-        }
-      };
-      fetchUserData();
-    }, []);
-  
-    const lastMessage = conv.lastMessage || {
-      text: 'No messages yet',
-      timestamp: null
-    };
-  
-    if (!otherUserData) {
-      return <div className='text-gray-500 dark:text-gray-400'>Loading...</div>;
-    }
-  
-    return (
-      <button
-        key={conv.id}
-        onClick={() => setSelectedConversation(conv)}
-        className={`w-full flex items-center p-3 gap-2 cursor-pointer rounded-lg text-left hover:bg-gray-50 dark:hover:bg-gray-900 transition ${
-          selectedConversation?.id === conv.id 
-            ? 'bg-gray-100 dark:bg-gray-900' 
-            : ''
-        }`}
-      >
-        {
-          otherUserData.photoURL ? (
-            <Image 
-              src={otherUserData.photoURL}
-              alt={otherUserData.displayName}
-              width={48}
-              height={48}
-              className="rounded-full w-12 h-12 flex-shrink-0"
-            />
-          ) : (
-            <div className="rounded-full flex-shrink-0 bg-gray-200 dark:bg-gray-800 w-12 h-12 flex items-center justify-center">
-              {otherUserData.displayName[0]}
-            </div>
-          )
-        }
-        <div className="flex-grow">
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-sm">{otherUserData.displayName}</h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              {formatTime(lastMessage.timestamp)}
-            </p>
-          </div>
-          <p className="text-xs font-semibold text-blue-500 dark:text-blue-400">
-            {lastMessage.text}
-          </p>
-        </div>
-      </button>
-    );
-  };
 
   useEffect(() => {
     if (!newConversationQuery.trim()) {
@@ -414,7 +432,7 @@ export default function InboxPage() {
             </div>
           ) : (
             conversations.map((conv) => {
-              return <ConversationItem key={conv.id} conv={conv} user={user} />
+              return <MemoizedConversationItem key={conv.id} conv={conv} user={user} setSelectedConversation={setSelectedConversation} selectedConversation={selectedConversation} />
             })
           )}
         </div>
@@ -459,7 +477,7 @@ export default function InboxPage() {
                       {selectedConversation?.otherUser?.displayName || 'New Conversation'}
                     </h2>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Starting new conversation...
+                      Last seen {formatTime(selectedConversation?.otherUser?.lastSeen) || 'Starting new conversation...'}
                     </p>
                   </div>
                 </>
