@@ -15,20 +15,20 @@ export default function PlaylistGridItem({ playlist, handleDeletePlaylist }) {
     >
         <div className="aspect-square relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-900">
           {/* Playlist Cover */}
-          <Link href={`/playlists/${playlist._id}`} className="absolute inset-0 cursor-pointer">
+          {/* <Link href={`/playlists/${playlist._id}`} className="absolute inset-0 cursor-pointer"> */}
               <Image
                 src={playlist.cover || defaultImage}
                 alt={playlist.name}
-                width={300}
-                height={300}
+                fill
                 className="object-cover"
                 unoptimized
               />
-          </Link>
+          {/* </Link> */}
 
           
           {/* Dark Overlay */}
-          <div className="absolute inset-0 bg-black/10 group-hover:bg-black/50 transition-colors duration-300" />
+          <Link href={`/playlists/${playlist._id}`} className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300">
+          </Link>
           
           {/* Action Buttons */}
           <button 

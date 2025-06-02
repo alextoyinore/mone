@@ -41,7 +41,7 @@ export default function RootLayout({ children }) {
                 <main className="flex flex-col mx-auto min-h-screen w-full relative">
                   <section className="flex w-full relative">
                     <SideNav />
-                    <div className="flex-grow relative overflow-y-auto transition-all duration-300 p-4">
+                    <div className="flex-grow relative overflow-y-auto transition-all duration-300 p-6">
                       {children}
                     </div>
                     <RightNav />

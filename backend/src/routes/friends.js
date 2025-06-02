@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const Song = require('../models/Song');
-const verifyFirebaseToken = require('../middleware/auth');
+const verifyFirebaseToken = require('../middleware/verifyFirebaseToken');
 
 // Get friend activity
 router.get('/activity', verifyFirebaseToken, async (req, res) => {

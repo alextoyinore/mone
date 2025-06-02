@@ -2,12 +2,27 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: [
-      'firebasestorage.googleapis.com',
-      'placehold.co',
-      'lh3.googleusercontent.com',
-      'localhost',
-      'res.cloudinary.com',  // Added for potential Cloudinary usage
+    remotePatterns  : [
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'placehold.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
     ],
     remotePatterns: [
       {

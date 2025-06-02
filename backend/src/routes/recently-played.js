@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
       existingEntry.playedAt = new Date();
     } else {
       // Add new entry if not already present
-      if (user.recentlyPlayed.length >= 100) {
+      if (user.recentlyPlayed.length >= 50) {
         // Remove the oldest entry (first in the array)
         user.recentlyPlayed.shift();
       }

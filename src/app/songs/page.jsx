@@ -137,7 +137,7 @@ export default function SongsPage() {
   if (!songs || songs.length === 0) {
     return (
       <div className="bg-white dark:bg-black min-h-screen">
-        <div className="flex justify-between items-center mb-6">
+        <div className="sticky top-0 left-0 flex justify-between items-center mb-6">
           <div className="flex items-center space-x-2 w-1/3">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Songs</h1>
             <div className="flex items-center space-x-2">
@@ -145,7 +145,7 @@ export default function SongsPage() {
               <span onClick={() => {setSongsForPlayback(songs); playSong(songs[0])}} className="text-blue-500 cursor-pointer">Play All</span>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center">
             <button
               onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
               className="p-2 rounded-full cursor-pointer bg-gray-200 dark:bg-gray-900 hover:bg-blue-100 dark:hover:bg-gray-600 transition-colors"

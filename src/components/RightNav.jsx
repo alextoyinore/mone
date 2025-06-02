@@ -64,7 +64,7 @@ const RightNav = () => {
   };
 
   return (
-    <div className="w-80 hidden lg:block bg-white dark:bg-black border-l border-gray-200 dark:border-gray-800 p-4 space-y-4">
+    <div className={`w-80 hidden lg:block sticky ${ currentSong ? 'top-0 max-h-[calc(100vh-5em)]' : 'top-0 max-h-screen' } right-0 bg-white dark:bg-black border-l border-gray-200 dark:border-gray-800 p-4 space-y-4`}>
       {/* Tab Navigation */}
       <div className="border-b border-gray-200 dark:border-gray-800">
         <nav className="-mb-px flex space-x-4" aria-label="Tabs">
